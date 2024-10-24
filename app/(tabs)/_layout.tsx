@@ -11,8 +11,17 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
+
+        tabBarActiveTintColor: '#ffd33d',
+        headerStyle: {
+          backgroundColor: '#3d80d4',
+          
+        },
+        headerShadowVisible: false,
+        headerTintColor: '#fff',
+        tabBarStyle: {
+          backgroundColor: '#1b3658',
+        },
       }}>
       <Tabs.Screen
         name="index"
@@ -26,9 +35,30 @@ export default function TabLayout() {
       <Tabs.Screen
         name="explore"
         options={{
+          href: null, // No mostrar en la barra de navegación
           title: 'Explore',
+
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name={focused ? 'code-slash' : 'code-slash-outline'} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="mapa"
+        options={{
+          title: 'Mapa',
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon name={focused ? 'map' : 'map-outline'} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="camera"
+        options={{
+          href: null, // No mostrar en la barra de navegación
+          title: 'Camara',
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon name={focused ? 'camera' : 'camera-outline'} color={color} />
           ),
         }}
       />

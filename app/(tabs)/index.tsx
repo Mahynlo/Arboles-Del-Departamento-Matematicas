@@ -1,9 +1,10 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import { Image, StyleSheet, Platform, TouchableOpacity } from 'react-native';
 
 import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { Link } from 'expo-router';
 
 export default function HomeScreen() {
   return (
@@ -16,7 +17,7 @@ export default function HomeScreen() {
         />
       }>
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
+        <ThemedText type="title">Welcome! a my app</ThemedText>
         <HelloWave />
       </ThemedView>
       <ThemedView style={styles.stepContainer}>
@@ -46,6 +47,50 @@ export default function HomeScreen() {
           <ThemedText type="defaultSemiBold">app-example</ThemedText>.
         </ThemedText>
       </ThemedView>
+
+      <ThemedView style={styles.stepContainer}>
+        <ThemedText>
+          <TouchableOpacity style={styles.button}>
+            <Link href="/about">
+              Go to About screen
+            </Link>
+          </TouchableOpacity>
+        </ThemedText>
+
+        <ThemedText type="subtitle">
+          <TouchableOpacity  style={styles.button}>
+            <Link href="/scanerCamara" >
+              Go to Camara screen
+            </Link>
+          </TouchableOpacity>
+        </ThemedText>
+
+        <ThemedText type="subtitle">
+          <TouchableOpacity  style={styles.button}>
+            <Link href="/mapa" >
+              IR a Mapa
+            </Link>
+          </TouchableOpacity>
+        </ThemedText>
+
+        <ThemedText type="subtitle">
+          <TouchableOpacity  style={styles.button}>
+            <Link href="/generadorQr" >
+              Generar QR
+            </Link>
+          </TouchableOpacity>
+        </ThemedText>
+        <ThemedText type="subtitle">
+          <TouchableOpacity  style={styles.button}>
+            <Link href="/TreeRegistration" >
+              Registro de arbol
+            </Link>
+          </TouchableOpacity>
+        </ThemedText>
+
+
+
+      </ThemedView>
     </ParallaxScrollView>
   );
 }
@@ -66,5 +111,13 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     position: 'absolute',
+  },
+  button: {
+    fontSize: 40,
+    textDecorationLine: 'underline',
+    position: 'absolute',
+    backgroundColor: '#1e90ff',
+    padding: 10,
+    borderRadius: 50,
   },
 });

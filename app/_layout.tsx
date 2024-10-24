@@ -30,6 +30,10 @@ export default function RootLayout() {
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="about" options={{ title: 'About',headerStyle: { backgroundColor: '#f4511e' }}} />
+        <Stack.Screen name="scanerCamara" options={{ title: 'Camara Scaner',headerStyle: { backgroundColor: '#f4511e' }}} />
+        <Stack.Screen name= "generadorQr" options={{ title:'Genrador Qr'}}/>
+        <Stack.Screen name="TreeRegistration" options={{ title: 'Tree Registration' }} />
         <Stack.Screen name="+not-found" />
       </Stack>
     </ThemeProvider>
