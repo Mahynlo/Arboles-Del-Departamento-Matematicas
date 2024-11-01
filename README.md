@@ -6,28 +6,29 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
 
 ### Siga los siguientes pasos:
 
-1. Instalar dependencias
+### 1. Clonar repositorio
 
    ```bash
    git clone https://github.com/Mahynlo/Arboles-Del-Departamento-Matematicas.git
    ```
 
-2. Instalar dependencias(ejecute este comando en el directorio raiz)
+### 2. Instalar dependencias(ejecute este comando en el directorio raiz)
 
    ```bash
    npm install
    ```
 
-3. Iniciar la app
+### 3. Descargue la app de Expo GO en playstore(Android) or appsotre(iOS) para correr la app en el celular.
+
+### 4. Ejecutar aplicacion
 
    ```bash
     npx expo start
    ```
-4. Descargue la app de expo GO en playstore(Android) or appsotre(iOS) para correr la app en el celular.
 
-5.Escanee el codigo qr para ejecutar la aplicacion.
--Si dessea abrirlo en la version Web ulilise el enlase
-
+### 5.Escane el codigo QR para ejecutar la aplicacion.
+- Si dessea abrirlo en la version Web utilice el enlace proporcionado http://localhost:8081
+--
 
 In the output, you'll find options to open the app in a
 
