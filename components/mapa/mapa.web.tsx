@@ -47,16 +47,6 @@ export default function MapaScreen() {
             `))
             .addTo(map);
 
-            const marker1 = new Mapbox.Marker(markerElement)
-            .setLngLat([-110.97098674615973, 29.080701963862167])
-            .setPopup(new Mapbox.Popup().setHTML(`
-                <div>
-                    <h1>Localizacion del Árbol 2</h1>
-                    <button id="navigateButton" style="padding:5px; margin-top:5px; ">Informacion</button>
-                </div>
-            `))
-            .addTo(map);
-
             marker.getPopup().on('open', () => {
                 // Usamos un setTimeout para asegurarnos de que el botón esté disponible en el DOM
                 setTimeout(() => {
