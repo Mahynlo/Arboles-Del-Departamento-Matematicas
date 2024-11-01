@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Platform, TouchableOpacity } from 'react-native';
+import { Image, StyleSheet, Platform, TouchableOpacity, Pressable } from 'react-native';
 
 import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
@@ -17,81 +17,49 @@ export default function HomeScreen() {
         />
       }>
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome! a my app</ThemedText>
+        <ThemedText type="title">Arboles Del Departamento De Datematicas</ThemedText>
         <HelloWave />
       </ThemedView>
+
+      {/* Example steps */}
       <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
+        <ThemedText type="subtitle">Acerca del proyecto</ThemedText>
         <ThemedText>
           Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
           Press{' '}
           <ThemedText type="defaultSemiBold">
-            {Platform.select({ ios: 'cmd + d', android: 'cmd + m' })}
+            {Platform.select({ ios: 'cmd + d', android: 'cmd + m', web: 'ctrl + m' })}
           </ThemedText>{' '}
           to open developer tools.
         </ThemedText>
       </ThemedView>
+
+      {/* Navigation buttons */}
       <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText>
-          <TouchableOpacity style={styles.button}>
-            <Link href="/about">
-              Go to About screen
-            </Link>
-          </TouchableOpacity>
-        </ThemedText>
-
-        <ThemedText type="subtitle">
-          <TouchableOpacity  style={styles.button}>
-            <Link href="/scanerCamara" >
-              Go to Camara screen
-            </Link>
-          </TouchableOpacity>
-        </ThemedText>
-
-        <ThemedText type="subtitle">
-          <TouchableOpacity  style={styles.button}>
-            <Link href="/mapa" >
-              IR a Mapa
-            </Link>
-          </TouchableOpacity>
-        </ThemedText>
-
-        <ThemedText type="subtitle">
-          <TouchableOpacity  style={styles.button}>
-            <Link href="/generadorQr" >
-              Generar QR
-            </Link>
-          </TouchableOpacity>
-        </ThemedText>
-        <ThemedText type="subtitle">
-          <TouchableOpacity  style={styles.button}>
-            <Link href="/TreeRegistration" >
-              Registro de arbol
-            </Link>
-          </TouchableOpacity>
-        </ThemedText>
-
-
-
+        <ButtonLink href="/about" title="Go to About screen" />
+        <ButtonLink href="/scanerCamara" title="Go to Camara screen" />
+        <ButtonLink href="/mapa" title="IR a Mapa" />
+        <ButtonLink href="/generadorQr" title="Generar QR" />
+        <ButtonLink href="/TreeRegistration" title="Registro de arbol" />
       </ThemedView>
     </ParallaxScrollView>
+  );
+}
+
+interface ButtonLinkProps {
+  href: string;
+  title: string;
+}
+
+function ButtonLink({ href, title }: ButtonLinkProps) {
+  const Wrapper = Platform.OS === 'web' ? Pressable : TouchableOpacity;
+
+  return (
+    <Wrapper style={styles.button}>
+      <Link href={href as any} style={styles.linkText}>
+        {title}
+      </Link>
+    </Wrapper>
   );
 }
 
@@ -108,16 +76,36 @@ const styles = StyleSheet.create({
   reactLogo: {
     height: 178,
     width: 290,
+    position: 'absolute',
     bottom: 0,
     left: 0,
-    position: 'absolute',
   },
   button: {
-    fontSize: 40,
-    textDecorationLine: 'underline',
-    position: 'absolute',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 30,
     backgroundColor: '#1e90ff',
-    padding: 10,
-    borderRadius: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: 5,
+    ...Platform.select({
+      web: {
+        width: '30%',
+        left: '35%',
+        padding: 10,
+        borderRadius: 5,
+      },
+      default: {
+        width: '70%',
+        right: 50,
+        alignSelf: 'center',
+      },
+    }),
+  },
+  linkText: {
+    color: '#fff',
+    fontSize: 16,
+    textDecorationLine: Platform.OS === 'web' ? 'underline' : 'none',
+
   },
 });

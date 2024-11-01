@@ -2,20 +2,31 @@
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
-## Get started
+## Iniciar proyecto
 
-1. Install dependencies
+### Siga los siguientes pasos:
+
+1. Instalar dependencias
+
+   ```bash
+   git clone https://github.com/Mahynlo/Arboles-Del-Departamento-Matematicas.git
+   ```
+
+2. Instalar dependencias(ejecute este comando en el directorio raiz)
 
    ```bash
    npm install
    ```
 
-2. Start the app
+3. Iniciar la app
 
    ```bash
     npx expo start
    ```
-3. Dowland app expo in playstore(Android) or appsotre(iOS).
+4. Descargue la app de expo GO en playstore(Android) or appsotre(iOS) para correr la app en el celular.
+
+5.Escanee el codigo qr para ejecutar la aplicacion.
+-Si dessea abrirlo en la version Web ulilise el enlase
 
 
 In the output, you'll find options to open the app in a

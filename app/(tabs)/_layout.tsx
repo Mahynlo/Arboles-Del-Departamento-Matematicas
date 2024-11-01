@@ -33,9 +33,20 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="mapa"
+        options={{
+          //href: null, // No mostrar en la barra de navegación
+          title: 'Mapa',
+
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon name={focused ? 'map' : 'map-outline'} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="explore"
         options={{
-          href: null, // No mostrar en la barra de navegación
+          //href: null, // No mostrar en la barra de navegación
           title: 'Explore',
 
           tabBarIcon: ({ color, focused }) => (
@@ -43,25 +54,7 @@ export default function TabLayout() {
           ),
         }}
       />
-      <Tabs.Screen
-        name="mapa"
-        options={{
-          title: 'Mapa',
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'map' : 'map-outline'} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="camera"
-        options={{
-          href: null, // No mostrar en la barra de navegación
-          title: 'Camara',
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'camera' : 'camera-outline'} color={color} />
-          ),
-        }}
-      />
+      
     </Tabs>
   );
 }

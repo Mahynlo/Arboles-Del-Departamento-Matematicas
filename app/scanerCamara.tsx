@@ -1,6 +1,6 @@
-import { CameraView, useCameraPermissions, Camera} from 'expo-camera';
+import { CameraView, useCameraPermissions, Camera } from 'expo-camera';
 import { useState, useEffect } from 'react';
-import { Button, StyleSheet, Text, View ,Alert,TouchableOpacity } from 'react-native';
+import { Button, StyleSheet, Text, View, Alert, Platform } from 'react-native';
 
 type Prop = {
   type: string;
@@ -8,42 +8,49 @@ type Prop = {
 };
 
 export default function ScanerCameraScreen() {
-  const [permission,requestPermission] = useCameraPermissions();
-  const [scanned,setScanned] = useState(false);
+  const [permission, requestPermission] = useCameraPermissions();
+  const [scanned, setScanned] = useState(false);
 
-  useEffect(()=>{
-    (async()=>{
-      const {status} = await Camera.requestCameraPermissionsAsync()
-
-      if(status  !== 'granted'){
+  useEffect(() => {
+    (async () => {
+      if (Platform.OS === 'web') return; // Evita solicitud de permisos en web
+      const { status } = await Camera.requestCameraPermissionsAsync();
+      if (status !== 'granted') {
         alert('Disculpe, necesitamos permisos de cámara para hacer esto');
       }
+    })();
+  }, []);
 
-    })()
-  },[])
-
-  // se encarga de manejar el escaneo del código de qr
+  // Maneja el escaneo del código QR
   const handleBarCodeScanned = ({ type, data }: Prop) => {
-      setScanned(true);
-      Alert.alert(
-        `Código ${type} Scaneado`, 
-        `Dados: ${data}`,      
-        [
-          {
-            text: 'OK',      
-            onPress: () => setScanned(false),  
-          }
-        ],
-        { cancelable: false } 
-      );
+    setScanned(true);
+    Alert.alert(
+      `Código ${type} Scaneado`,
+      `Datos: ${data}`,
+      [
+        {
+          text: 'OK',
+          onPress: () => setScanned(false),
+        },
+      ],
+      { cancelable: false }
+    );
   };
 
-  
-  if (!permission?.granted) {
-    // Camera permissions are still loading or denied.
+  if (Platform.OS === 'web') {
+    // Mensaje de no disponible para la web
     return (
       <View style={styles.container}>
-        <Text style={styles.permissionText}>Permiso de camara no concedido.</Text>
+        <Text style={styles.permissionText}>La cámara no está disponible en la versión web.</Text>
+      </View>
+    );
+  }
+
+  if (!permission?.granted) {
+    // Permisos de cámara no concedidos
+    return (
+      <View style={styles.container}>
+        <Text style={styles.permissionText}>Permiso de cámara no concedido.</Text>
         <Button title="Solicitar Permisos" onPress={requestPermission} />
       </View>
     );
@@ -63,11 +70,9 @@ export default function ScanerCameraScreen() {
         </View>
         <View style={styles.layerBottom} />
       </View>
-      
     </CameraView>
-    );
+  );
 }
-
 
 const styles = StyleSheet.create({
   container: {
@@ -112,23 +117,5 @@ const styles = StyleSheet.create({
   layerBottom: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.6)',
-  },
-  resultContainer: {
-    padding: 20,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-  },
-  resultText: {
-    fontSize: 18,
-    marginVertical: 10,
-  },
-  button: {
-    backgroundColor: '#00FF00',
-    padding: 10,
-    borderRadius: 5,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
   },
 });

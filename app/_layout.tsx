@@ -4,6 +4,8 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
+import { Platform } from 'react-native';
+import { Link, Slot, Tabs } from 'expo-router';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 
@@ -31,9 +33,6 @@ export default function RootLayout() {
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="about" options={{ title: 'About',headerStyle: { backgroundColor: '#f4511e' }}} />
-        <Stack.Screen name="scanerCamara" options={{ title: 'Camara Scaner',headerStyle: { backgroundColor: '#f4511e' }}} />
-        <Stack.Screen name= "generadorQr" options={{ title:'Genrador Qr'}}/>
-        <Stack.Screen name="TreeRegistration" options={{ title: 'Tree Registration' }} />
         <Stack.Screen name="+not-found" />
       </Stack>
     </ThemeProvider>
