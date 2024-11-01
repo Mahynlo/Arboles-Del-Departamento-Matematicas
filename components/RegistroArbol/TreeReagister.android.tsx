@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ScrollView,Image } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import QRCode from 'react-native-qrcode-svg';
@@ -129,7 +129,12 @@ export default function TreeRegister() {
                     showsUserLocation
                     showsMyLocationButton
                 >
-                    <Marker coordinate={location} title="Ubicacion del arbol" description={descripcion} />
+                    <Marker coordinate={location} title="Ubicacion del arbol" description={descripcion} >
+                    <Image
+            source={require('@/assets/images/TreeIcon.png')}
+            style={styles.markerImage}
+          />
+                    </Marker>
                 </MapView>
 
                 <TouchableOpacity style={styles.button} onPress={generateQRCode}>
@@ -205,4 +210,8 @@ const styles = StyleSheet.create({
         marginTop: 30,
         alignItems: 'center',
     },
+    markerImage: {
+        width: 35,
+        height: 35
+      }
 });

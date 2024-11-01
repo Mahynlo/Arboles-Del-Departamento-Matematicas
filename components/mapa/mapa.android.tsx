@@ -1,9 +1,10 @@
 import * as React from 'react';
 import * as Location from 'expo-location';
-import { Text, View, StyleSheet, TouchableOpacity, Animated, PanResponder } from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity, Animated, PanResponder,Image } from 'react-native';
 import MapView, { Marker, Polygon, PROVIDER_GOOGLE } from 'react-native-maps';
 import { Link } from 'expo-router';
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
+
 
 export default function MapaScreen() {
   const [origin, setOrigin] = React.useState({
@@ -151,7 +152,13 @@ export default function MapaScreen() {
           title="Origen"
           description="Aquí estoy."
           onPress={() => handleMarkerPress('Origen')}
-        />
+        >
+          <Image
+            source={require('@/assets/images/TreeIcon.png')}
+            style={styles.markerImage}
+          />
+        </Marker>
+
         <Marker
           draggable
           coordinate={destination}
@@ -159,7 +166,13 @@ export default function MapaScreen() {
           title="Destino"
           description="Aquí es donde quiero ir."
           onPress={() => handleMarkerPress('Destino')}
-        />
+        >
+          <Image
+            source={require('@/assets/images/TreeIcon.png')}
+            style={styles.markerImage}
+          />
+        </Marker>
+
         <Polygon
           coordinates={[origin, destination]}
           strokeColor="green"
@@ -191,7 +204,7 @@ export default function MapaScreen() {
           <Text style={styles.infoText}>{selectedMarker} seleccionado 🌳</Text>
           <TouchableOpacity onPress={handleCloseInfo}>
             <TouchableOpacity style={styles.animatedButton} onPress={handleLocatePress}>
-              <Link href="/">
+              <Link href="/InfoTree">
                 <Text style={styles.buttonText}>Info</Text>
               </Link>
             </TouchableOpacity>
@@ -262,4 +275,8 @@ const styles = StyleSheet.create({
     color: '#1e90ff',
     marginTop: 5,
   },
+  markerImage: {
+    width: 35,
+    height: 35
+  }
 });
