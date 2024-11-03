@@ -188,9 +188,9 @@ export default function MapaScreen() {
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.alertButton}>
-          <Link href="/">
+          <Link href="/TreeRegistration">
             <Text style={styles.buttonText}>
-              <TabBarIcon name="add" color="#fff" />
+              <TabBarIcon name="leaf" color="#fff" />
             </Text>
           </Link>
         </TouchableOpacity>
