@@ -8,7 +8,7 @@ import { ThemedView } from '@/components/ThemedView';
 import { Link } from 'expo-router';
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import Constants from 'expo-constants';
-import Card from "../../components/Card";
+import Card from "../../components/Ui/Card";
 
 
 export default function HomeScreen() {
@@ -65,43 +65,58 @@ export default function HomeScreen() {
             <ThemedText>Accede a la información completa de los árboles en la versión web.</ThemedText>
           </ThemedView>
 
-          <Card
-            title="Informacion de Árboles"
-            description="Estadisticas de Los Árboles registrados."
-            imageUrl="./assets/images/Arbol_de_prueba.jpg"
-            onPress={() => alert('Montañas seleccionadas')}
-          />
+          <ThemedView style={styles.cardContainer}>
+            <Card
+              title="Informacion de Árboles"
+              description="Estadisticas de Los Árboles registrados."
+              imageUrl="./assets/images/Arbol_de_prueba.jpg"
+              onPress={() => alert('Montañas seleccionadas')}
+            />
 
-          <Card
-            title="Mapas"
-            description="Ve la distribucion de los árboles en el mapa."
-            imageUrl="./assets/images/Imagen_Mapa.jpg"
-            onPress={() => alert('Mapa seleccionado')}
-          />
+            <Card
+              title="Mapas"
+              description="Ve la distribucion de los árboles en el mapa."
+              imageUrl="./assets/images/Imagen_Mapa.jpg"
+              onPress={() => alert('Mapa seleccionado')}
+            />
+            <Card
+              title="Informacion de Árboles"
+              description="Estadisticas de Los Árboles registrados."
+              imageUrl="./assets/images/Arbol_de_prueba.jpg"
+              onPress={() => alert('Montañas seleccionadas')}
+            />
+
+            <Card
+              title="Mapas"
+              description="Ve la distribucion de los árboles en el mapa."
+              imageUrl="./assets/images/Imagen_Mapa.jpg"
+              onPress={() => alert('Mapa seleccionado')}
+            />
+          </ThemedView>
+
 
           <ThemedView style={styles.footer}>
             <ThemedText type="subtitle" style={styles.footerText}>© 2023 Departamento de Matemáticas</ThemedText>
-            <Link href="/" style={styles.footerLink}><TabBarIcon name="mail-outline" color="#fff" style={styles.icon}/></Link>
-            {/* GitHub en otra pestaña */}
-            <Link href="https://github.com/Mahynlo/Arboles-Del-Departamento-Matematicas/tree/main" style={styles.footerLink}><TabBarIcon name="logo-github" color="#fff" style={styles.icon}/></Link>
+            <ThemedView style={styles.footerIcons}>
+              <Link href="/" style={styles.footerLink}><TabBarIcon name="mail-outline" color="#fff" style={styles.icon} /></Link>
+              {/* GitHub en otra pestaña */}
+              <Link href="https://github.com/Mahynlo/Arboles-Del-Departamento-Matematicas/tree/main" style={styles.footerLink}><TabBarIcon name="logo-github" color="#fff" style={styles.icon} /></Link>
+            </ThemedView>
+
             <Link href="/" style={styles.footerLink}>Política de Privacidad</Link>
           </ThemedView>
         </ThemedView>
-
 
       ) : (
         <>
 
         </>
       )}
-
-
-
     </ParallaxScrollView>
   );
 }
 
-interface ButtonLinkProps {
+interface ButtonLinkProps {//Propiedades de los botones
   href: string;
   title: string;
   iconName?: ComponentProps<typeof Ionicons>['name'];
@@ -114,7 +129,9 @@ function ButtonLink({ href, title, iconName, color }: ButtonLinkProps) {
   return (
     <Wrapper style={[styles.button, { backgroundColor: color }]}>
       <Link href={href as any} style={styles.linkText}>
-        {iconName && <TabBarIcon name={iconName} color="#fff" style={styles.icon} />} {/* Agrega el ícono */}
+        {/* Agrega el ícono */}
+        {iconName && <TabBarIcon name={iconName} color="#fff" style={styles.icon} />}
+        {/*Titulo del icono*/}
         {title}
       </Link>
     </Wrapper>
@@ -180,11 +197,23 @@ const styles = StyleSheet.create({
     color: '#1e90ff',
     fontSize: 14,
     marginTop: 8,
-    textDecorationLine: 'underline',
+  },
+  footerIcons: {
+    flexDirection: 'row', // Alinea los botones en una fila
+    flexWrap: 'wrap',
+    gap:10,
   },
   // Web-specific Section
   webSectionContainer: {
     paddingHorizontal: 16,
     paddingBottom: 16,
   },
+  cardContainer: {
+    flexDirection: 'row', // Alinea los botones en una fila
+    flexWrap: 'wrap', // Permite que los botones ocupen varias líneas
+    //justifyContent: 'space-around', // Centra las filas en el contenedor
+    justifyContent: Platform.OS === 'web' ? 'center' : 'flex-start', // Centra los botones en web y los separa en móvil
+    marginHorizontal: 2,
+    gap: 30, // Espacio entre los botones
+  }
 });

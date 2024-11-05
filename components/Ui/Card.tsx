@@ -33,6 +33,8 @@ const styles = StyleSheet.create({
     elevation: 3, // para sombra en Android
     marginVertical: 10,
     overflow: 'hidden',
+    width: 300,
+    height:300,
   },
   image: {
     width: '100%',
