@@ -7,6 +7,8 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { Link } from 'expo-router';
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
+import Constants from 'expo-constants';
+
 
 export default function HomeScreen() {
   return (
@@ -28,7 +30,8 @@ export default function HomeScreen() {
         <ThemedText>
           {Platform.OS === 'web' ? (
             <>
-              Puedes ver la información de los árboles registrados
+              Puedes ver la información de los árboles registrados en el Departamento de Matemáticas.
+              
             </>
           ) : (
             <>

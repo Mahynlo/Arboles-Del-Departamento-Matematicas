@@ -4,16 +4,19 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import { Link, useRouter } from 'expo-router';
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Colors } from "react-native/Libraries/NewAppScreen";
+import Constants  from "expo-constants";
+
+import {MAPBOX_MAP_TOKEN} from '@env'; // Importar variables de entorno
 
 // Importar componentes específicos según la plataforma
 const Mapbox = Platform.OS === "web" ? require("mapbox-gl") : null;
-const MAPBOX_ACCESS_TOKEN = "pk.eyJ1IjoibWFsY29tbmF2YXJybyIsImEiOiJjbTJzN3BhcDIxYjAzMm1vZ3AxbjhpZnptIn0.x22BBCn00br6jKy6fhTMcA";
+const Token = MAPBOX_MAP_TOKEN;
 
 // Configuración inicial para cada plataforma
 if (Platform.OS === "web") {
-    Mapbox.accessToken = MAPBOX_ACCESS_TOKEN;
+    Mapbox.accessToken = Token;
 } else {
-    Mapbox.default.setAccessToken(MAPBOX_ACCESS_TOKEN);
+    Mapbox.default.setAccessToken(Token);
 }
 
 export default function MapaScreen() {
