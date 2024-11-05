@@ -8,6 +8,7 @@ import { ThemedView } from '@/components/ThemedView';
 import { Link } from 'expo-router';
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import Constants from 'expo-constants';
+import Card from "../../components/Card";
 
 
 export default function HomeScreen() {
@@ -31,7 +32,7 @@ export default function HomeScreen() {
           {Platform.OS === 'web' ? (
             <>
               Puedes ver la información de los árboles registrados en el Departamento de Matemáticas.
-              
+
             </>
           ) : (
             <>
@@ -60,13 +61,29 @@ export default function HomeScreen() {
             </>
           </ThemedText>
           <ThemedView style={styles.webSectionContainer}>
-          <ThemedText type="subtitle">Versión Web</ThemedText>
-          <ThemedText>Accede a la información completa de los árboles en la versión web.</ThemedText>
-        </ThemedView>
+            <ThemedText type="subtitle">Versión Web</ThemedText>
+            <ThemedText>Accede a la información completa de los árboles en la versión web.</ThemedText>
+          </ThemedView>
+
+          <Card
+            title="Informacion de Árboles"
+            description="Estadisticas de Los Árboles registrados."
+            imageUrl="./assets/images/Arbol_de_prueba.jpg"
+            onPress={() => alert('Montañas seleccionadas')}
+          />
+
+          <Card
+            title="Mapas"
+            description="Ve la distribucion de los árboles en el mapa."
+            imageUrl="./assets/images/Imagen_Mapa.jpg"
+            onPress={() => alert('Mapa seleccionado')}
+          />
 
           <ThemedView style={styles.footer}>
             <ThemedText type="subtitle" style={styles.footerText}>© 2023 Departamento de Matemáticas</ThemedText>
-            <Link href="/" style={styles.footerLink}><TabBarIcon name="mail-outline" color="#fff" style={styles.icon} /></Link>
+            <Link href="/" style={styles.footerLink}><TabBarIcon name="mail-outline" color="#fff" style={styles.icon}/></Link>
+            {/* GitHub en otra pestaña */}
+            <Link href="https://github.com/Mahynlo/Arboles-Del-Departamento-Matematicas/tree/main" style={styles.footerLink}><TabBarIcon name="logo-github" color="#fff" style={styles.icon}/></Link>
             <Link href="/" style={styles.footerLink}>Política de Privacidad</Link>
           </ThemedView>
         </ThemedView>

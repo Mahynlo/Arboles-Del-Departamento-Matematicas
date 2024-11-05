@@ -127,7 +127,7 @@ function HeaderLinks() {
 function HeaderLinksMovil(){
   return (
     <TouchableOpacity style={{ flexDirection: 'row', gap: 10, marginRight: 10 }}>
-      <Link href="/explore" style={{ marginHorizontal: 10 }}>
+      <Link href="/settings" style={{ marginHorizontal: 10 }}>
         <Text style={{ color: '#fff' }}> <TabBarIcon name="settings-outline" color="#fff" /> </Text>
       </Link>
     </TouchableOpacity>
