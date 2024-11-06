@@ -10,6 +10,7 @@ import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import Constants from 'expo-constants';
 import Card from "../../components/Ui/Card";
 
+const Token = process.env.HOLA;
 
 export default function HomeScreen() {
   return (
@@ -27,7 +28,7 @@ export default function HomeScreen() {
       </ThemedView>
 
       <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Acerca del proyecto</ThemedText>
+        <ThemedText type="subtitle">Acerca del proyecto {Token}</ThemedText>
         <ThemedText>
           {Platform.OS === 'web' ? (
             <>
@@ -96,14 +97,13 @@ export default function HomeScreen() {
 
 
           <ThemedView style={styles.footer}>
-            <ThemedText type="subtitle" style={styles.footerText}>© 2023 Departamento de Matemáticas</ThemedText>
             <ThemedView style={styles.footerIcons}>
               <Link href="/" style={styles.footerLink}><TabBarIcon name="mail-outline" color="#fff" style={styles.icon} /></Link>
               {/* GitHub en otra pestaña */}
               <Link href="https://github.com/Mahynlo/Arboles-Del-Departamento-Matematicas/tree/main" style={styles.footerLink}><TabBarIcon name="logo-github" color="#fff" style={styles.icon} /></Link>
             </ThemedView>
-
             <Link href="/" style={styles.footerLink}>Política de Privacidad</Link>
+            <ThemedText type="subtitle" style={styles.footerText}>© 2023 Departamento de Matemáticas</ThemedText>
           </ThemedView>
         </ThemedView>
 

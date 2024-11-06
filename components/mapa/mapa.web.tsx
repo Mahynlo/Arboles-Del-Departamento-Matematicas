@@ -8,7 +8,7 @@ import Constants  from "expo-constants";
 
 // Importar componentes específicos según la plataforma
 const Mapbox = Platform.OS === "web" ? require("mapbox-gl") : null;
-const Token = "Token";
+const Token = process.env.EXPO_PUBLIC_MAPBOX_TOKEN;
 
 // Configuración inicial para cada plataforma
 if (Platform.OS === "web") {

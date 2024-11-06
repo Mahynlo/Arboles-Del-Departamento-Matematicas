@@ -2,6 +2,7 @@
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
+ ---
 ## Iniciar proyecto
 
 ### Siga los siguientes pasos:
@@ -29,6 +30,20 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
 ### 5.Escane el codigo QR para ejecutar la aplicacion.
 - Si dessea abrirlo en la version Web utilice el enlace proporcionado http://localhost:8081
 --
+
+ ---
+## Variables de Entorno 
+
+### Cree un archivo llamado .env en el directorio raiz de la aplicación.
+```bash
+    .env
+ ```
+ 
+### Coloque las siguientes variables dentro del archivo.
+```bash
+    EXPO_PUBLIC_MAPBOX_TOKEN=sy.sds... #Variable para el mapa de la version web
+ ```
+ ---
 
 In the output, you'll find options to open the app in a
 
