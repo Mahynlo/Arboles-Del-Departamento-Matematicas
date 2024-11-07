@@ -6,11 +6,10 @@ import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Colors } from "react-native/Libraries/NewAppScreen";
 import Constants  from "expo-constants";
 
-import {MAPBOX_MAP_TOKEN} from '@env'; // Importar variables de entorno
 
 // Importar componentes específicos según la plataforma
 const Mapbox = Platform.OS === "web" ? require("mapbox-gl") : null;
-const Token = MAPBOX_MAP_TOKEN;
+const Token = process.env.EXPO_PUBLIC_MAPBOX_TOKEN;
 
 // Configuración inicial para cada plataforma
 if (Platform.OS === "web") {
