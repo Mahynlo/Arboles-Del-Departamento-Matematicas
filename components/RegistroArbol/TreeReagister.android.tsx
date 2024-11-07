@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ScrollView,Image } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ScrollView, Image } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import QRCode from 'react-native-qrcode-svg';
 import * as FileSystem from 'expo-file-system';
 import * as MediaLibrary from 'expo-media-library';
 import { supabase } from '../../lib/supabase';
+import { ThemedView } from '../ThemedView';
 
 export default function TreeRegister() {
     const [nombre, setTreeName] = useState('');
@@ -185,20 +186,21 @@ export default function TreeRegister() {
                     showsMyLocationButton
                 >
                     <Marker coordinate={location} title="Ubicacion del arbol">{/*description={descripcion}*/}
-                    <Image
-            source={require('@/assets/images/TreeIcon.png')}
-            style={styles.markerImage}
-          />
+                        <Image
+                            source={require('@/assets/images/TreeIcon.png')}
+                            style={styles.markerImage}
+                        />
                     </Marker>
                 </MapView>
-
+                <ThemedView style={styles.stepContainerButton}>
                 <TouchableOpacity style={styles.button} onPress={generateQRCode}>
                     <Text style={styles.buttonText}>Generate QR Code</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.button} onPress={saveTreeToSupabase}>
-                            <Text style={styles.buttonText}>Guardar en Base de Datos</Text>
+                    <Text style={styles.buttonText}>Guardar en Base de Datos</Text>
                 </TouchableOpacity>
+                </ThemedView>
 
                 {isQRActive && (
                     <View style={styles.qrCodeContainer}>
@@ -263,6 +265,9 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         alignItems: 'center',
     },
+    stepContainerButton: {
+        gap: 12,
+    },
     buttonText: {
         color: '#fff',
         fontSize: 18,
@@ -274,5 +279,5 @@ const styles = StyleSheet.create({
     markerImage: {
         width: 35,
         height: 35
-      }
+    }
 });
