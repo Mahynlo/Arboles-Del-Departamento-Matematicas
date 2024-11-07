@@ -5,21 +5,26 @@ import * as Location from 'expo-location';
 import QRCode from 'react-native-qrcode-svg';
 import * as FileSystem from 'expo-file-system';
 import * as MediaLibrary from 'expo-media-library';
+import { supabase } from '../../lib/supabase';
 
 export default function TreeRegister() {
-    const [treeName, setTreeName] = useState('');
-    const [otherInfo, setOtherInfo] = useState('');
-    const [color, setColor] = useState('');
-    const [altura, setAltura] = useState('');
-    const [descripcion, setDescripcion] = useState('');
+    const [nombre, setTreeName] = useState('');
+    const [nombre_cientifico, setScientific] = useState('');
+    //const [descripcion, setDescription] = useState('');
+    const [tipo_sitio, setSite] = useState('');
+    const [dendometria, setDendometry] = useState('');
+    const [estado_salud, setHealth] = useState('');
+    const [conflictos, setIssues] = useState('');
+    const [riesgo, setRisk] = useState('');
     const [location, setLocation] = useState({ latitude: 37.78825, longitude: -122.4324 });
     const [isQRActive, setIsQRActive] = useState(false);
-    const [region, setRegion] = useState({
-        latitude: 37.78825,
-        longitude: -122.4324,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
-    });
+
+    //const [region, setRegion] = useState({
+    //    latitude: 37.78825,
+    //    longitude: -122.4324,
+    //    latitudeDelta: 0.0922,
+    //    longitudeDelta: 0.0421,
+    //});
 
     const qrRef = useRef<any>(null);
 
@@ -36,16 +41,16 @@ export default function TreeRegister() {
                 latitude: location.coords.latitude,
                 longitude: location.coords.longitude,
             });
-            setRegion({
-                ...region,
-                latitude: location.coords.latitude,
-                longitude: location.coords.longitude,
-            });
+            //setRegion({
+            //    ...region,
+            //    latitude: location.coords.latitude,
+            //    longitude: location.coords.longitude,
+            //});
         })();
     }, []);
 
     const generateQRCode = () => {
-        if (!treeName) {
+        if (!nombre) {
             Alert.alert('Error', 'Por fabor ingrese un nombre para el árbol.');
             return;
         }
@@ -86,6 +91,30 @@ export default function TreeRegister() {
         setLocation({ latitude, longitude });
     };
 
+    const saveTreeToSupabase = async () => {
+        const { data, error } = await supabase
+            .from('arbol')
+            .insert({
+                nombre,
+                nombre_cientifico,
+                //descripcion,
+                tipo_sitio,
+                dendometria,
+                estado_salud,
+                conflictos,
+                riesgo,
+                //latitud: location.latitude,
+                //longitud: location.longitude
+            });
+
+        if (error) {
+            Alert.alert('Error', 'No se pudo registrar el árbol en la base de datos.');
+            console.log(error);
+        } else {
+            Alert.alert('Éxito', 'Árbol registrado en la base de datos.');
+        }
+    };
+
     return (
         <ScrollView contentContainerStyle={styles.scrollContainer}>
             <View style={styles.container}>
@@ -94,42 +123,68 @@ export default function TreeRegister() {
                 <TextInput
                     style={styles.input}
                     placeholder="Nombre del Árbol"
-                    value={treeName}
+                    value={nombre}
                     onChangeText={setTreeName}
                 />
 
                 <TextInput
                     style={styles.input}
-                    placeholder="Color"
-                    value={color}
-                    onChangeText={setColor}
+                    placeholder="Nombre Científico"
+                    value={nombre_cientifico}
+                    onChangeText={setScientific}
                 />
 
-                <TextInput
-                    style={styles.input}
-                    placeholder="Altura"
-                    value={altura}
-                    onChangeText={setAltura}
-                />
-
-                <TextInput
+                {/*<TextInput
                     style={styles.input}
                     placeholder="Descripcion"
                     value={descripcion}
-                    onChangeText={setDescripcion}
+                    onChangeText={setDescription}
+                />*/}
+
+                <TextInput
+                    style={styles.input}
+                    placeholder="Tipo De Sitio"
+                    value={tipo_sitio}
+                    onChangeText={setSite}
                 />
 
+                <TextInput
+                    style={styles.input}
+                    placeholder="Dendrometría"
+                    value={dendometria}
+                    onChangeText={setDendometry}
+                />
 
+                <TextInput
+                    style={styles.input}
+                    placeholder="Estado De Salud"
+                    value={estado_salud}
+                    onChangeText={setHealth}
+                />
+
+                <TextInput
+                    style={styles.input}
+                    placeholder="Conflictos"
+                    value={conflictos}
+                    onChangeText={setIssues}
+                />
+
+                <TextInput
+                    style={styles.input}
+                    placeholder="Riesgo"
+                    value={riesgo}
+                    onChangeText={setRisk}
+                />
 
                 <Text style={styles.mapLabel}>Select Tree Location on Map:</Text>
                 <MapView
                     style={styles.map}
-                    region={region}
+                    //region={region}
                     onPress={onMapPress}
                     showsUserLocation
                     showsMyLocationButton
                 >
-                    <Marker coordinate={location} title="Ubicacion del arbol" description={descripcion} >
+                    <Marker coordinate={location} title="Ubicacion del arbol">{/*description={descripcion}*/}
                     <Image
             source={require('@/assets/images/TreeIcon.png')}
             style={styles.markerImage}
@@ -141,16 +196,19 @@ export default function TreeRegister() {
                     <Text style={styles.buttonText}>Generate QR Code</Text>
                 </TouchableOpacity>
 
+                <TouchableOpacity style={styles.button} onPress={saveTreeToSupabase}>
+                            <Text style={styles.buttonText}>Guardar en Base de Datos</Text>
+                </TouchableOpacity>
+
                 {isQRActive && (
                     <View style={styles.qrCodeContainer}>
                         <QRCode
-                            value={`Tree: ${treeName}\nLocation: ${location.latitude}, ${location.longitude}\nInfo: ${otherInfo}Color: ${color} Altura: ${altura}`}
+                            value={`Nombre: ${nombre}\nNombre Científico: ${nombre_cientifico}\nTipo de Sitio: ${tipo_sitio}\nDendrometría: ${dendometria}\nEstado de Salud: ${estado_salud}\nConflictos: ${conflictos}\nRiesgo: ${riesgo}\nUbicación:`}//${location.latitude}, ${location.longitude}
                             size={256}
                             color="black"
                             backgroundColor="white"
                             getRef={(c) => (qrRef.current = c)}
                         />
-
                         <TouchableOpacity style={[styles.button, { marginTop: 20 }]} onPress={saveQRCode}>
                             <Text style={styles.buttonText}>Save QR Code</Text>
                         </TouchableOpacity>
@@ -159,6 +217,9 @@ export default function TreeRegister() {
             </View>
         </ScrollView>
     );
+
+
+
 }
 
 const styles = StyleSheet.create({
