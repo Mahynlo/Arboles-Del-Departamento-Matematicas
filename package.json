@@ -19,6 +19,7 @@
     "@expo/vector-icons": "^14.0.2",
     "@react-navigation/native": "^6.0.2",
     "@rnmapbox/maps": "^10.1.31",
+    "@supabase/supabase-js": "^2.46.1",
     "expo": "~51.0.28",
     "expo-barcode-scanner": "~13.0.1",
     "expo-camera": "~15.0.16",

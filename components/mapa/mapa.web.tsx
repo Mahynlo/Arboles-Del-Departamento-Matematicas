@@ -5,6 +5,11 @@ import { Link, useRouter } from 'expo-router';
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import Constants from "expo-constants";
 
+<<<<<<< HEAD
+=======
+
+// Importar componentes específicos según la plataforma
+>>>>>>> Gaspar
 const Mapbox = Platform.OS === "web" ? require("mapbox-gl") : null;
 const Token = process.env.EXPO_PUBLIC_MAPBOX_TOKEN;
 
