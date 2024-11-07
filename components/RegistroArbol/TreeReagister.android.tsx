@@ -19,12 +19,12 @@ export default function TreeRegister() {
     const [location, setLocation] = useState({ latitude: 37.78825, longitude: -122.4324 });
     const [isQRActive, setIsQRActive] = useState(false);
 
-    //const [region, setRegion] = useState({
-    //    latitude: 37.78825,
-    //    longitude: -122.4324,
-    //    latitudeDelta: 0.0922,
-    //    longitudeDelta: 0.0421,
-    //});
+    const [region, setRegion] = useState({
+        latitude: 29.0809,
+        longitude: -110.961,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+    });
 
     const qrRef = useRef<any>(null);
 
@@ -41,11 +41,11 @@ export default function TreeRegister() {
                 latitude: location.coords.latitude,
                 longitude: location.coords.longitude,
             });
-            //setRegion({
-            //    ...region,
-            //    latitude: location.coords.latitude,
-            //    longitude: location.coords.longitude,
-            //});
+            setRegion({
+                ...region,
+                latitude: location.coords.latitude,
+                longitude: location.coords.longitude,
+            });
         })();
     }, []);
 
@@ -103,8 +103,8 @@ export default function TreeRegister() {
                 estado_salud,
                 conflictos,
                 riesgo,
-                //latitud: location.latitude,
-                //longitud: location.longitude
+                latitud: location.latitude,
+                longitud: location.longitude
             });
 
         if (error) {
