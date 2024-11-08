@@ -42,6 +42,8 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
 ### Coloque las siguientes variables dentro del archivo.
 ```bash
     EXPO_PUBLIC_MAPBOX_TOKEN=sy.sds... #Variable para el mapa de la version web
+    EXPO_PUBLIC_SUPABASE_KEY=ey.dfsdf... #Variable para la conexion a supabase
+    EXPO_PUBLIC_SUPABASE_URL=https://supabase.url #url de suapabase
  ```
  ---
 
