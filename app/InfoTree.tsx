@@ -4,6 +4,7 @@ import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { Link } from 'expo-router';
+import GalleryTree from '@/components/arbol/GalleryTree';
 
 export default function InformacionTree() {
     return (
@@ -35,10 +36,8 @@ export default function InformacionTree() {
                 </ThemedText>
             </ThemedView>
             <ThemedView style={styles.stepContainer}>
-                <ThemedText type="subtitle">Paso 2: Explorar</ThemedText>
-                <ThemedText>
-                    Toca la pestaña Explorar para aprender más sobre lo que incluye esta aplicación de inicio.
-                </ThemedText>
+                <ThemedText type="subtitle">Galeria</ThemedText>
+                <GalleryTree />
             </ThemedView>
             <ThemedView style={styles.stepContainer}>
                 <ThemedText type="subtitle">Paso 3: Comienza desde cero</ThemedText>

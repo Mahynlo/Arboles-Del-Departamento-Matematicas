@@ -4,14 +4,12 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import { Link, useRouter } from 'expo-router';
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import Constants from "expo-constants";
-
+import GalleryTree from "../arbol/GalleryTree";
 const Mapbox = Platform.OS === "web" ? require("mapbox-gl") : null;
 const Token = process.env.EXPO_PUBLIC_MAPBOX_TOKEN;
 
 if (Platform.OS === "web") {
     Mapbox.accessToken = Token;
-} else {
-    Mapbox.default.setAccessToken(Token);
 }
 
 const markers = [
@@ -23,15 +21,22 @@ const markers = [
 
 export default function MapaScreen() {
     const router = useRouter();
-    const [selectedTree, setSelectedTree] = useState<{ id: number; coordinates: number[]; title: string; description: string } | null>(null); // Estado para el árbol seleccionado
-    let map: any;
+    interface Tree {
+        id: number;
+        coordinates: number[];
+        title: string;
+        description: string;
+    }
+    
+    const [selectedTree, setSelectedTree] = useState<Tree | null>(null);
+    const [map, setMap] = useState<typeof Mapbox.Map | null>(null);
 
     useEffect(() => {
-        if (Platform.OS === "web") {
-            map = new Mapbox.Map({
+        if (Platform.OS === "web" && Mapbox) {
+            const mapInstance = new Mapbox.Map({
                 container: "map",
                 style: "mapbox://styles/mapbox/streets-v11",
-                center: [-110.967847,29.098678],
+                center: [-110.967847, 29.098678],
                 zoom: 11,
             });
 
@@ -50,10 +55,10 @@ export default function MapaScreen() {
                             <button id="navigateButton-${markerData.id}" style="padding:5px; margin-top:5px;">Ver Información</button>
                         </div>
                     `))
-                    .addTo(map);
+                    .addTo(mapInstance);
 
                 marker.getPopup().on('open', () => {
-                    setSelectedTree(markerData); // Establecer el árbol seleccionado al hacer clic
+                    setSelectedTree(markerData);
                     setTimeout(() => {
                         const navigateButton = document.getElementById(`navigateButton-${markerData.id}`);
                         if (navigateButton) {
@@ -63,11 +68,17 @@ export default function MapaScreen() {
                         }
                     }, 0);
                 });
-                // Cuando el popup se cierra
-            marker.getPopup().on('close', () => {
-                setSelectedTree(null); // Cerrar el panel de información
+
+                marker.getPopup().on('close', () => {
+                    setSelectedTree(null);
+                });
             });
-            });
+
+            setMap(mapInstance);
+
+            return () => {
+                mapInstance.remove();
+            };
         }
     }, [router]);
 
@@ -78,14 +89,11 @@ export default function MapaScreen() {
     const zoomOut = () => {
         if (map) map.zoomOut();
     };
-    
 
     return (
         <View style={styles.container}>
-            {/* Contenedor del mapa */}
             <div id="map" style={styles.mapWeb} />
 
-            {/* Panel de información del árbol seleccionado */}
             {selectedTree && (
                 <View style={styles.infoPanel}>
                     <Text style={styles.treeTitle}>{selectedTree.title}</Text>
@@ -95,22 +103,17 @@ export default function MapaScreen() {
                     </TouchableOpacity>
                     <Text>Latitud: {selectedTree.coordinates[1]}</Text>
                     <Text>Longitud: {selectedTree.coordinates[0]}</Text>
-                    <Image
-                        source={require('@/assets/images/Arbol_de_prueba.jpg')}
-                        style={styles.reactLogo}
-                    />  
+                    <Text>Imagenes del Arbol</Text>
+                    <GalleryTree /> 
                 </View>
             )}
 
-
-            {/* Botón para agregar un nuevo árbol */}
             <TouchableOpacity style={styles.addButton}>
                 <Link href="/TreeRegistration">
                     <TabBarIcon name="add" />
                 </Link>
             </TouchableOpacity>
 
-            {/* Botones para acercar y alejar el mapa */}
             <View style={styles.zoomContainer}>
                 <TouchableOpacity onPress={zoomIn} style={styles.zoomButton}>
                     <Text style={styles.zoomText}>+</Text>
@@ -199,8 +202,8 @@ const styles = StyleSheet.create({
         width: '100%',
         resizeMode: 'cover',
     },
-   
 });
+
 
 
 
