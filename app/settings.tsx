@@ -28,12 +28,12 @@ export default function SettingScreen() {
                 <View>
                     <ThemedView style={styles.stepContainer}>
                         <ThemedText type="subtitle">Cinfiguracion</ThemedText>
+                        <Text style={styles.subHeader}>Opcciones avanzadas</Text>
                         <ThemedText>
                             <>
                                 Esta es la página de configuración de la aplicación en su verion movil.
                             </>
                         </ThemedText>
-
                         {/* Botones en grid */}
                         <ThemedView style={styles.buttonGridContainer}>
                             <TouchableOpacity style={styles.button}>
@@ -52,6 +52,10 @@ export default function SettingScreen() {
                                 <Text style={styles.link}>Boton 5</Text>
                             </TouchableOpacity>
                         </ThemedView>
+                        <Text style={styles.subHeader}>Perfil de Usuario</Text>
+                        <Text style={styles.subHeader}>Apariencia</Text>
+                        
+
                     </ThemedView>
 
                 </View>
@@ -67,7 +71,7 @@ const styles = StyleSheet.create({
         color: '#fff',
         borderRadius: 10,
         margin: 10,
-        backgroundColor: '#875926',
+        
 
     },
     reactLogo: {
@@ -102,4 +106,11 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         
     },
+    subHeader: {
+        backgroundColor : "#2089dc",
+        color : "white",
+        textAlign : "center",
+        paddingVertical : 5,
+        marginBottom : 10
+      }
 });

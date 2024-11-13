@@ -9,8 +9,7 @@ import { Link } from 'expo-router';
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import Constants from 'expo-constants';
 import Card from "../../components/Ui/Card";
-
-const Token = process.env.HOLA;
+import { PricingCard, lightColors } from '@rneui/themed';
 
 export default function HomeScreen() {
   return (
@@ -28,29 +27,46 @@ export default function HomeScreen() {
       </ThemedView>
 
       <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Acerca del proyecto {Token}</ThemedText>
+        <ThemedText type="subtitle">Acerca del proyecto</ThemedText>
         <ThemedText>
           {Platform.OS === 'web' ? (
             <>
               Puedes ver la información de los árboles registrados en el Departamento de Matemáticas.
-
             </>
           ) : (
             <>
               Registra un árbol o ve la información de un árbol ya registrado
+
             </>
           )}
         </ThemedText>
       </ThemedView>
 
-      {/* Botones en grid */}
-      <ThemedView style={styles.buttonGridContainer}>
-        <ButtonLink href="/about" title="About" iconName="information-circle" color="#FF6347" />
-        <ButtonLink href="/scanerCamara" title="Camera screen" iconName="camera" color="#8A2BE2" />
-        <ButtonLink href="/mapa" title="Mapa" iconName="map" color="#4682B4" />
-        <ButtonLink href="/generadorQr" title="Generar de QR" iconName="qr-code" color="#FFD700" />
-        <ButtonLink href="/TreeRegistration" title="Registro de árbol" iconName="leaf" color="#32CD32" />
-      </ThemedView>
+      {Platform.OS === 'web' ? (
+        <>
+          {/* Botones en grid */}
+          <ThemedView style={styles.buttonGridContainer}>
+            <ButtonLink href="/about" title="About" iconName="information-circle" color="#FF6347" />
+            <ButtonLink href="/mapa" title="Mapa" iconName="map" color="#4682B4" />
+            <ButtonLink href="/generadorQr" title="Generar de QR" iconName="qr-code" color="#FFD700" />
+          </ThemedView>
+        </>
+      ) : (
+
+        <>
+          {/* Botones en grid */}
+          <ThemedView style={styles.buttonGridContainer}>
+            <ButtonLink href="/about" title="About" iconName="information-circle" color="#FF6347" />
+            <ButtonLink href="/scanerCamara" title="Camera screen" iconName="camera" color="#8A2BE2" />
+            <ButtonLink href="/mapa" title="Mapa" iconName="map" color="#4682B4" />
+            <ButtonLink href="/generadorQr" title="Generar de QR" iconName="qr-code" color="#FFD700" />
+            <ButtonLink href="/TreeRegistration" title="Registro de árbol" iconName="leaf" color="#32CD32" />
+
+          </ThemedView>
+        </>
+      )}
+
+
 
 
       {Platform.OS === 'web' ? (
@@ -93,6 +109,7 @@ export default function HomeScreen() {
               imageUrl="./assets/images/Imagen_Mapa.jpg"
               onPress={() => alert('Mapa seleccionado')}
             />
+
           </ThemedView>
 
 
@@ -109,6 +126,7 @@ export default function HomeScreen() {
 
       ) : (
         <>
+
 
         </>
       )}
@@ -201,7 +219,7 @@ const styles = StyleSheet.create({
   footerIcons: {
     flexDirection: 'row', // Alinea los botones en una fila
     flexWrap: 'wrap',
-    gap:10,
+    gap: 10,
   },
   // Web-specific Section
   webSectionContainer: {

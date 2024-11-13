@@ -1,46 +1,69 @@
-import { Stack, Tabs } from 'expo-router';
+import { Stack, Tabs, usePathname } from 'expo-router';
 import React from 'react';
 
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { Platform,TouchableOpacity, Text } from 'react-native';
-import { Link } from 'expo-router';
+import { Platform, TouchableOpacity, Text } from 'react-native';
+import { Link,useRouter } from 'expo-router';
+import HeaderLinks from '@/components/navigation/HeaderLinks'; // Importar componente de enlaces en el encabezado
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();  
-
+  const colorScheme = useColorScheme();
+  const title= "ARDEMA TREE PROJECT";
+ 
   // Condición para no mostrar Tabs en la web
   if (Platform.OS === 'web') {
-    return(
+    return (
       //se muestra el componente index
       <Stack>
         <Stack.Screen name="index" options={{
-            title: 'Home', // Título de la barra de navegación
-            headerStyle: { backgroundColor: '#3d80d4' },
-            headerRight: () => (  // Se muestra en la barra de navegación
-              <HeaderLinks/> // Componente de enlaces
-            ),
-          }
+          title: title, // Título de la barra de navegación
+          headerLeft: () => null, // No mostrar botón de regreso
+          headerTitleStyle: {
+            fontSize: 20,
+            fontWeight: 'bold',
+            color: '#fff',
+            fontFamily: 'YourCustomFont', // Asegúrate de que la fuente esté cargada
+          },
+          headerStyle: { backgroundColor: '#3d80d4' },
+          headerRight: () => (  // Se muestra en la barra de navegación
+            <HeaderLinks /> // Componente de enlaces
+          ),
+        }
         } />
         <Stack.Screen name="mapa" options={
           {
-            title: 'Mapa',
-            headerStyle: { backgroundColor: '#3d80d4' },
-            headerRight: () => ( 
-              <HeaderLinks/>
-            ),
-          }
-        }/>
-        <Stack.Screen name="explore" options={{
-            title: 'Explore',
+            title: title,
+            headerLeft: () => null, // No mostrar botón de regreso
+            headerTitleStyle: {// Estilo del título
+              fontSize: 20,
+              fontWeight: 'bold',
+              color: '#fff',
+              fontFamily: 'YourCustomFont', // Asegúrate de que la fuente esté cargada
+            },
             headerStyle: { backgroundColor: '#3d80d4' },
             headerRight: () => (
-              <HeaderLinks/>
+              <HeaderLinks />
             ),
           }
-        }/>
-        
+        } />
+        <Stack.Screen name="explore" options={{
+          title: title,
+          headerLeft: () => null, // No mostrar botón de regreso
+          headerTitleStyle: {// Estilo del título
+            fontSize: 20,
+            fontWeight: 'bold',
+            color: '#fff',
+            fontFamily: 'YourCustomFont', // Asegúrate de que la fuente esté cargada
+          },
+          headerStyle: { backgroundColor: '#3d80d4' },
+          headerRight: () => (
+            <HeaderLinks />
+          ),
+        }
+        } />
+
       </Stack>
     )
   }
@@ -52,7 +75,7 @@ export default function TabLayout() {
         tabBarActiveTintColor: '#ffd33d',
         headerStyle: {
           backgroundColor: '#3d80d4',
-          
+
         },
         headerShadowVisible: false,
         headerTintColor: '#fff',
@@ -60,7 +83,7 @@ export default function TabLayout() {
           backgroundColor: '#1b3658',
         },
       }}
-      > 
+    >
       <Tabs.Screen
         name="index"
         options={{
@@ -69,7 +92,7 @@ export default function TabLayout() {
             <TabBarIcon name={focused ? 'home' : 'home-outline'} color={color} />
           ),
           headerRight: () => (
-            <HeaderLinksMovil/> // Solo se muestra en web
+            <HeaderLinksMovil /> // Solo se muestra en web
           ),
         }}
       />
@@ -82,7 +105,7 @@ export default function TabLayout() {
             <TabBarIcon name={focused ? 'map' : 'map-outline'} color={color} />
           ),
           headerRight: () => (
-            <HeaderLinksMovil/> // Solo se muestra en web
+            <HeaderLinksMovil /> // Solo se muestra en web
           ),
         }}
       />
@@ -96,35 +119,18 @@ export default function TabLayout() {
             <TabBarIcon name={focused ? 'code-slash' : 'code-slash-outline'} color={color} />
           ),
           headerRight: () => (
-            <HeaderLinksMovil/> // Solo se muestra en web
+            <HeaderLinksMovil /> // Solo se muestra en web
           ),
         }}
       />
-      
+
     </Tabs>
   );
 }
 
 
-// Componente para los enlaces en el encabezado
-function HeaderLinks() {
-  return (
-    <TouchableOpacity style={{ flexDirection: 'row', gap: 10, marginRight: 10}}>
-      <Link href="/" style={{ marginHorizontal: 10 }}>
-        <Text style={{ color: '#fff' }}>Home</Text>
-      </Link>
-      <Link href="/mapa" style={{ marginHorizontal: 20 }}>
-        <Text style={{ color: '#fff' }}>Mapa</Text>
-      </Link>
-      <Link href="/explore" style={{ marginHorizontal: 10 }}>
-        <Text style={{ color: '#fff' }}>Explore</Text>
-      </Link>
-    </TouchableOpacity>
-  );
-}
-
 // Componente para los enlaces en el encabezado en movil
-function HeaderLinksMovil(){
+function HeaderLinksMovil() {
   return (
     <TouchableOpacity style={{ flexDirection: 'row', gap: 10, marginRight: 10 }}>
       <Link href="/settings" style={{ marginHorizontal: 10 }}>

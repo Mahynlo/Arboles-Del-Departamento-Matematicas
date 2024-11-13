@@ -37,7 +37,7 @@ export default function InformacionTree() {
             </ThemedView>
             <ThemedView style={styles.stepContainer}>
                 <ThemedText type="subtitle">Galeria</ThemedText>
-                <GalleryTree />
+                
             </ThemedView>
             <ThemedView style={styles.stepContainer}>
                 <ThemedText type="subtitle">Paso 3: Comienza desde cero</ThemedText>
