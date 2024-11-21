@@ -15,6 +15,7 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
+  const title= "ARDEMA TREE PROJECT";
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
@@ -41,13 +42,12 @@ export default function RootLayout() {
         <Stack.Screen
           name="about"
           options={{
-            title: 'ARDEMA TREE PROJECT',
+            title: Platform.OS === "web" ? title : 'About',
             headerLeft: () => null, // No mostrar botón de regreso
             headerTitleStyle: {
               fontSize: 20,
               fontWeight: 'bold',
               color: '#fff',
-              fontFamily: 'YourCustomFont', // Asegúrate de que la fuente esté cargada
             },
             headerStyle: { backgroundColor: '#3d80d4' },
             headerRight: () => (
@@ -56,6 +56,13 @@ export default function RootLayout() {
 
           }}
         />
+        <Stack.Screen name="TreeRegistration" options={{
+          title: 'Registro de Árbol',
+          headerTitleStyle: {
+            fontSize: 20,
+            fontWeight: 'bold',  
+          },
+        }} />
         <Stack.Screen name="+not-found" />
       </Stack>
     </ThemeProvider>

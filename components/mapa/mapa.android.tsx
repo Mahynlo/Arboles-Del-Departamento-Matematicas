@@ -7,7 +7,13 @@ import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import GalleryTree from "../arbol/GalleryTree";
 import { BottomSheet } from '@rneui/themed';
 import { ThemedView } from '@/components/ThemedView';
-import { G } from 'react-native-svg';
+
+const markers = [
+  { id: 1, coordinates: { latitude: 29.0807, longitude: -110.9609 }, title: "Árbol 1", description: "Descripción del Árbol 1" },
+  { id: 2, coordinates: { latitude: 29.080637, longitude: -110.960714 }, title: "Árbol 2", description: "Descripción del Árbol 2" },
+  { id: 3, coordinates: { latitude: 29.080620, longitude: -110.960795 }, title: "Árbol 3", description: "Descripción del Árbol 3" },
+  { id: 4, coordinates: { latitude: 29.0808, longitude: -110.9609 }, title: "Árbol 4", description: "Descripción del Árbol 4" },
+];
 
 export default function MapaScreen() {
   const [origin, setOrigin] = React.useState({
@@ -90,6 +96,7 @@ export default function MapaScreen() {
         showsUserLocation
         showsMyLocationButton={false}
       >
+        {/* Marcadores originales */}
         <Marker
           draggable
           coordinate={origin}
@@ -117,6 +124,22 @@ export default function MapaScreen() {
             style={styles.markerImage}
           />
         </Marker>
+
+        {/* Marcadores adicionales */}
+        {markers.map((marker) => (
+          <Marker
+            key={marker.id}
+            coordinate={marker.coordinates}
+            title={marker.title}
+            description={marker.description}
+            onPress={() => handleMarkerPress(marker.title)}
+          >
+            <Image
+              source={require('@/assets/images/TreeIcon.png')}
+              style={styles.markerImage}
+            />
+          </Marker>
+        ))}
 
         <Polygon
           coordinates={[origin, destination]}
@@ -222,7 +245,6 @@ const styles = StyleSheet.create({
     margin: 5,
     borderRadius: 10,
     width: "98%",
-
   },
   infoText: {
     fontSize: 22,
@@ -239,8 +261,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginTop: 5,
     gap: 10,
-    
-},
+  },
 });
+
 
 

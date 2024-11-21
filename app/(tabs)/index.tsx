@@ -12,6 +12,7 @@ import Card from "../../components/Ui/Card";
 import { PricingCard, lightColors } from '@rneui/themed';
 
 export default function HomeScreen() {
+  
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
@@ -61,6 +62,7 @@ export default function HomeScreen() {
             <ButtonLink href="/mapa" title="Mapa" iconName="map" color="#4682B4" />
             <ButtonLink href="/generadorQr" title="Generar de QR" iconName="qr-code" color="#FFD700" />
             <ButtonLink href="/TreeRegistration" title="Registro de árbol" iconName="leaf" color="#32CD32" />
+            <ButtonLink href='/camaraFoto' title="Tomar foto" iconName="camera" color="#FF6347" />
 
           </ThemedView>
         </>

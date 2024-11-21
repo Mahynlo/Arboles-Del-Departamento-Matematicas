@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ScrollView, Image } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ScrollView, Image, Button } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import QRCode from 'react-native-qrcode-svg';
@@ -7,6 +7,8 @@ import * as FileSystem from 'expo-file-system';
 import * as MediaLibrary from 'expo-media-library';
 import { supabase } from '../../lib/supabase';
 import { ThemedView } from '../ThemedView';
+import { ScannerCamera } from "@/components/fotos/CapturarImagen";
+import { TabBarIcon } from '../navigation/TabBarIcon';
 
 export default function TreeRegister() {
     const [nombre, setTreeName] = useState('');
@@ -19,6 +21,10 @@ export default function TreeRegister() {
     const [riesgo, setRisk] = useState('');
     const [location, setLocation] = useState({ latitude: 37.78825, longitude: -122.4324 });
     const [isQRActive, setIsQRActive] = useState(false);
+
+    // para captura de la imagen 
+    const [isCameraVisible, setCameraVisible] = useState(false);
+    const [capturedImage, setCapturedImage] = useState<string | null>(null);
 
     //const [region, setRegion] = useState({
     //    latitude: 37.78825,
@@ -62,7 +68,7 @@ export default function TreeRegister() {
         if (qrRef.current) {
             qrRef.current.toDataURL(async (data: string) => {
                 alert("Nombre");
-                const filePath = `${FileSystem.cacheDirectory}tree_qr_code.png`;
+                const filePath = `${FileSystem.cacheDirectory}tree_qr_code.png`; // Ruta de la imagen en la carpeta de caché del dispositivo 
 
                 try {
                     await FileSystem.writeAsStringAsync(filePath, data, {
@@ -76,7 +82,7 @@ export default function TreeRegister() {
                     }
 
                     const asset = await MediaLibrary.createAssetAsync(filePath);
-                    await MediaLibrary.createAlbumAsync('TreeQRCode', asset, false);
+                    await MediaLibrary.createAlbumAsync('TreeQRCode', asset, false); // Crea un álbum en la galería del dispositivo
 
                     Alert.alert('Success', 'QR Code saved to gallery!');
                 } catch (error) {
@@ -120,7 +126,7 @@ export default function TreeRegister() {
         <ScrollView contentContainerStyle={styles.scrollContainer}>
             <View style={styles.container}>
                 <Text style={styles.title}>Registrar Árbol</Text>
-
+                <Text style={styles.subHeader}><TabBarIcon name='caret-forward-sharp'/>Preguntas Referentes al arbol</Text>
                 <TextInput
                     style={styles.input}
                     placeholder="Nombre del Árbol"
@@ -176,7 +182,18 @@ export default function TreeRegister() {
                     value={riesgo}
                     onChangeText={setRisk}
                 />
-
+                <Text style={styles.subHeader}><TabBarIcon name='caret-forward-sharp'/>Captura de imagen del arbol</Text>
+                <Button title="Abrir Cámara" onPress={() => setCameraVisible(true)} />
+                <Text>Imagen capturada:</Text>
+                {capturedImage && (
+                    <Image source={{ uri: capturedImage }} style={{ width: 300, height: 300 }} />
+                )}
+                <ScannerCamera
+                    isVisible={isCameraVisible}
+                    onCapture={(uri) => setCapturedImage(uri)}
+                    onClose={() => setCameraVisible(false)}
+                />
+                <Text style={styles.subHeader}><TabBarIcon name='caret-forward-sharp'/>Ubicacion del arbol</Text>
                 <Text style={styles.mapLabel}>Select Tree Location on Map:</Text>
                 <MapView
                     style={styles.map}
@@ -193,13 +210,13 @@ export default function TreeRegister() {
                     </Marker>
                 </MapView>
                 <ThemedView style={styles.stepContainerButton}>
-                <TouchableOpacity style={styles.button} onPress={generateQRCode}>
-                    <Text style={styles.buttonText}>Generate QR Code</Text>
-                </TouchableOpacity>
+                    <TouchableOpacity style={styles.button} onPress={generateQRCode}>
+                        <Text style={styles.buttonText}>Generate QR Code</Text>
+                    </TouchableOpacity>
 
-                <TouchableOpacity style={styles.button} onPress={saveTreeToSupabase}>
-                    <Text style={styles.buttonText}>Guardar en Base de Datos</Text>
-                </TouchableOpacity>
+                    <TouchableOpacity style={styles.button} onPress={saveTreeToSupabase}>
+                        <Text style={styles.buttonText}>Guardar en Base de Datos</Text>
+                    </TouchableOpacity>
                 </ThemedView>
 
                 {isQRActive && (
@@ -219,9 +236,6 @@ export default function TreeRegister() {
             </View>
         </ScrollView>
     );
-
-
-
 }
 
 const styles = StyleSheet.create({
@@ -279,5 +293,13 @@ const styles = StyleSheet.create({
     markerImage: {
         width: 35,
         height: 35
+    },
+    subHeader: {
+        backgroundColor: "#25be10",
+        color: "white",
+        textAlign: "center",
+        paddingVertical: 10,
+        marginBottom: 20,
+        fontSize: 18,
     }
 });
