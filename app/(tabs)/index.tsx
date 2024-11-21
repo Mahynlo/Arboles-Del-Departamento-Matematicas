@@ -50,6 +50,7 @@ export default function HomeScreen() {
             <ButtonLink href="/about" title="About" iconName="information-circle" color="#FF6347" />
             <ButtonLink href="/mapa" title="Mapa" iconName="map" color="#4682B4" />
             <ButtonLink href="/generadorQr" title="Generar de QR" iconName="qr-code" color="#FFD700" />
+            <ButtonLink href='/camaraFoto' title="Tomar foto" iconName="camera" color="#FF6347" />
           </ThemedView>
         </>
       ) : (
