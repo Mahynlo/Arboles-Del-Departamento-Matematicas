@@ -1,13 +1,13 @@
-# Arboles-Del-Departamento-Matematicas 🌳
+# Arboles-Del-Departamento-Matematicas 🌳 🎄
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
-
+🎅
  ---
-## Iniciar proyecto
+## -Iniciar proyecto 🚩
 
 ### Siga los siguientes pasos:
 
-### 1. Clonar repositorio
+### 1. Clonar repositorio 💾
 
    ```bash
    git clone https://github.com/Mahynlo/Arboles-Del-Departamento-Matematicas.git
@@ -21,18 +21,29 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
 
 ### 3. Descargue la app de Expo GO en playstore(Android) or appsotre(iOS) para correr la app en el celular.
 
-### 4. Ejecutar aplicacion
+#### Para ejectuar este proyecto en la version movil es nesesario el SDK 51 en su version 2.31.2 para descargar el apk de Expo Go se anexa el siguiente link:
+https://expo.dev/go?sdkVersion=51&platform=android&device=true
+
+### 4. Ejecutar aplicacion 🏁 🏍️
 
    ```bash
     npx expo start
    ```
 
-### 5.Escane el codigo QR para ejecutar la aplicacion.
-- Si dessea abrirlo en la version Web utilice el enlace proporcionado http://localhost:8081
+## -Version de Movil consideraciones 📱:
+
+- Es nesecario el SDK 51 para Expo Go en su version 2.31.2 del apk para correr el proyecto en su version movil.
+--
+
+- Escane el codigo QR para ejecutar la aplicacion en la version de movil usando la app de Expo Go o un emulador de dispositivo.
+--
+
+## -Version de Web consideraciones 💻 🌐:
+- Si desea abrirlo en la version Web utilice el enlace proporcionado http://localhost:8081
 --
 
  ---
-## Variables de Entorno 
+## -Variables de Entorno 📌
 
 ### Cree un archivo llamado .env en el directorio raiz de la aplicación.
 ```bash
@@ -79,3 +90,4 @@ Join our community of developers creating universal apps.
 
 - [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
 - [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+
