@@ -256,6 +256,7 @@ const styles = StyleSheet.create({
     height: 30,
   },
   buttonGridContainer: {
+    backgroundColor: '#fff',
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',

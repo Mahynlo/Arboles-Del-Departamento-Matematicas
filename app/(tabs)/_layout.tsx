@@ -1,6 +1,6 @@
 import { Stack, Tabs, usePathname } from 'expo-router';
 import React from 'react';
-
+import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
@@ -16,6 +16,7 @@ export default function TabLayout() {
   if (Platform.OS === 'web') {
     return (
       //se muestra el componente index
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
         <Stack.Screen name="index" options={{
           title: title, // Título de la barra de navegación
@@ -65,6 +66,7 @@ export default function TabLayout() {
         } />
 
       </Stack>
+    </ThemeProvider>
     )
   }
   // vista para movil tabs 

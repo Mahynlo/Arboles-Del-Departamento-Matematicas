@@ -63,6 +63,9 @@ export default function RootLayout() {
             fontWeight: 'bold',  
           },
         }} />
+        <Stack.Screen name='settings' options={{
+          title: 'Configuración',
+        }} />
         <Stack.Screen name="+not-found" />
       </Stack>
     </ThemeProvider>
