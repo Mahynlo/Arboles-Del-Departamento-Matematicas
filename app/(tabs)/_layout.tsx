@@ -47,6 +47,7 @@ export default function TabLayout() {
             headerRight: () => (
               <HeaderLinks />
             ),
+            
           }
         } />
         <Stack.Screen name="explore" options={{

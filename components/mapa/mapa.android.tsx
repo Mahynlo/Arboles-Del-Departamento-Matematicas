@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import * as Location from 'expo-location';
 import { Text, View, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import MapView, { Marker, Polygon, PROVIDER_GOOGLE } from 'react-native-maps';
@@ -9,7 +9,7 @@ import { BottomSheet } from '@rneui/themed';
 import { ThemedView } from '@/components/ThemedView';
 
 const markers = [
-  { id: 1, coordinates: { latitude: 29.0807, longitude: -110.9609 }, title: "Árbol 1", description: "Descripción del Árbol 1" },
+  { id: 1, coordinates: { latitude: 29.0807, longitude: -110.9609 }, title: "Árbol Del departamento", description: "Descripción del Árbol 1" },
   { id: 2, coordinates: { latitude: 29.080637, longitude: -110.960714 }, title: "Árbol 2", description: "Descripción del Árbol 2" },
   { id: 3, coordinates: { latitude: 29.080620, longitude: -110.960795 }, title: "Árbol 3", description: "Descripción del Árbol 3" },
   { id: 4, coordinates: { latitude: 29.0808, longitude: -110.9609 }, title: "Árbol 4", description: "Descripción del Árbol 4" },
@@ -86,6 +86,7 @@ export default function MapaScreen() {
     }
   };
 
+
   return (
     <View style={styles.container}>
       <MapView
@@ -147,9 +148,10 @@ export default function MapaScreen() {
           strokeWidth={2}
         />
       </MapView>
-      
+
       {/* Botones flotantes */}
       <View style={styles.buttonContainer}>
+
         <TouchableOpacity style={styles.locateButton} onPress={handleLocatePress}>
           <Text style={styles.buttonText}>
             <TabBarIcon name="locate" color="#fff" />
@@ -163,6 +165,7 @@ export default function MapaScreen() {
           </Link>
         </TouchableOpacity>
       </View>
+        
 
       {/* BottomSheet para información */}
       <BottomSheet
@@ -175,17 +178,17 @@ export default function MapaScreen() {
           <Text> <TabBarIcon name="information-circle-outline" color="black" /> </Text>
           <ThemedView style={styles.buttonGridContainer}>
             {/* Botón para Información del árbol */}
-          <TouchableOpacity style={styles.animatedButton}>
-            <Link href="/InfoTree">
-              <Text style={styles.buttonText}>Info</Text>
-            </Link>
-          </TouchableOpacity>
-          
-          <TouchableOpacity style={styles.animatedButtonclose} onPress={handleCloseInfo}>
-            <Text style={styles.buttonText}>Cerrar</Text>
-          </TouchableOpacity>
+            <TouchableOpacity style={styles.animatedButton}>
+              <Link href="/InfoTree">
+                <Text style={styles.buttonText}>Info</Text>
+              </Link>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.animatedButtonclose} onPress={handleCloseInfo}>
+              <Text style={styles.buttonText}>Cerrar</Text>
+            </TouchableOpacity>
           </ThemedView>
-          
+
           <Text>Latitud: {origin.latitude}</Text>
           <Text>Longitud: {origin.longitude}</Text>
           <Text>Imágenes del Árbol</Text>
@@ -221,13 +224,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#1e90ff',
     padding: 10,
     borderRadius: 10,
-    marginTop : 10,
+    marginTop: 10,
   },
   animatedButtonclose: {
     backgroundColor: '#ff0000',
     padding: 10,
     borderRadius: 10,
-    marginTop : 10,
+    marginTop: 10,
   },
   alertButton: {
     backgroundColor: '#1abb3a',
@@ -263,6 +266,11 @@ const styles = StyleSheet.create({
     marginTop: 5,
     gap: 10,
   },
+  returnBoton: {
+    backgroundColor: '#1abb3a',
+    borderRadius: 50,
+  },
+
 });
 
 
