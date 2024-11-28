@@ -1,25 +1,33 @@
-import * as React from 'react';
+import React from 'react';
 import * as Location from 'expo-location';
-import { Text, View, StyleSheet, TouchableOpacity, Animated, PanResponder,Image } from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity, Image, Alert} from 'react-native';
 import MapView, { Marker, Polygon, PROVIDER_GOOGLE } from 'react-native-maps';
 import { Link } from 'expo-router';
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
+import GalleryTree from "../arbol/GalleryTree";
+import { BottomSheet } from '@rneui/themed';
+import { ThemedView } from '@/components/ThemedView';
+import { supabase } from '../../lib/supabase';
+import { useState, useEffect } from 'react';
+ 
 
+  const markers = [
+    { id: 1, coordinates: { latitude: 29.0807, longitude: -110.9609 }, title: "Árbol Del departamento", description: "Descripción del Árbol 1" },
+    { id: 2, coordinates: { latitude: 29.080637, longitude: -110.960714 }, title: "Árbol 2", description: "Descripción del Árbol 2" },
+    { id: 3, coordinates: { latitude: 29.080620, longitude: -110.960795 }, title: "Árbol 3", description: "Descripción del Árbol 3" },
+    { id: 4, coordinates: { latitude: 29.0808, longitude: -110.9609 }, title: "Árbol 4", description: "Descripción del Árbol 4" },
+  ];
 
 export default function MapaScreen() {
   const [origin, setOrigin] = React.useState({
     latitude: 29.083197,
     longitude: -110.964019,
   });
-
   const [destination, setDestination] = React.useState({
     latitude: 29.080698,
     longitude: -110.960745,
   });
-
-  const [showInfo, setShowInfo] = React.useState(false);
-  const [infoPosition] = React.useState(new Animated.Value(1));
-  const [buttonsPosition] = React.useState(new Animated.Value(0));
+  const [isBottomSheetVisible, setIsBottomSheetVisible] = React.useState(false);
   const [selectedMarker, setSelectedMarker] = React.useState<string | null>(null);
   const mapRef = React.useRef<MapView>(null);
 
@@ -34,117 +42,102 @@ export default function MapaScreen() {
     getLocalitationPermission();
   }, []);
 
-  async function getLocalitationPermission() { // Función para obtener la ubicación
+  async function getLocalitationPermission() {
     let { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== 'granted') { // Si no se otorga el permiso entonces
+    if (status !== 'granted') {
       alert('Permiso denegado');
       return;
     }
     let location = await Location.getCurrentPositionAsync({});
-    const current = { // Crea un objeto con la ubicación actual
+    const current = {
       latitude: location.coords.latitude,
       longitude: location.coords.longitude,
     };
     setOrigin(current);
   }
 
-  const handleMarkerPress = (marker: string) => { // Función para mostrar la información
+  const handleMarkerPress = (marker: string) => {
     setSelectedMarker(marker);
-    setShowInfo(true);
-    Animated.timing(buttonsPosition, { // Anima los botones hacia abajo
-      toValue: -100,
-      duration: 300,
-      useNativeDriver: false,
-    }).start();
-
-    Animated.timing(infoPosition, { // Anima la información hacia arriba
-      toValue: 1,
-      duration: 300,
-      useNativeDriver: false,
-    }).start();
+    setIsBottomSheetVisible(true); // Abre el BottomSheet
   };
 
-  const handleCloseInfo = () => { // Función para cerrar la información
-    Animated.timing(infoPosition, { // Anima la información hacia abajo
-      toValue: 0,
-      duration: 500,
-      useNativeDriver: false,
-    }).start(() => { // Cuando termine la animación entonces
-      setShowInfo(false); // Oculta la información
-      setSelectedMarker(null); // Quita el marcador seleccionado
-      infoPosition.setValue(1); // Reinicia la posición de la información
-
-      Animated.timing(buttonsPosition, { // Anima los botones hacia arriba
-        toValue: 0,
-        duration: 300,
-        useNativeDriver: false,
-      }).start();
-    });
+  const handleCloseInfo = () => {
+    setIsBottomSheetVisible(false); // Cierra el BottomSheet
+    setSelectedMarker(null);
   };
 
-  const handleLocatePress = async () => {// Función para localizar el usuario
+  const handleLocatePress = async () => {
     const { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== 'granted') {
       alert('Permiso denegado');
       return;
     }
 
-    const location = await Location.getCurrentPositionAsync({}); // Obtiene la ubicación actual
-    const current = { // Crea un objeto con la ubicación actual
+    const location = await Location.getCurrentPositionAsync({});
+    const current = {
       latitude: location.coords.latitude,
       longitude: location.coords.longitude,
     };
 
-    setOrigin(current); // Actualiza el origen
-    if (mapRef.current) { // Si el mapa existe entonces
-      mapRef.current.animateToRegion({ // Anima el mapa a la ubicación actual
-        ...current, // Con la ubicación actual
+    setOrigin(current);
+    if (mapRef.current) {
+      mapRef.current.animateToRegion({
+        ...current,
         latitudeDelta: 0.05,
         longitudeDelta: 0.04,
       }, 800);
     }
   };
 
-  const infoTranslateY = infoPosition.interpolate({
-    inputRange: [0, 1],
-    outputRange: [300, 100],
-  });
-
-  const buttonsTranslateY = buttonsPosition.interpolate({
-    inputRange: [-100, 0],
-    outputRange: [-180, 0],
-  });
-
-  const panResponder = React.useRef(
-    PanResponder.create({
-      onMoveShouldSetPanResponder: (_, gestureState) => gestureState.dy > 10,
-      onPanResponderMove: (_, gestureState) => {
-        let newPosition = Math.max(0, 1 - gestureState.dy / 200);
-        infoPosition.setValue(newPosition);
-      },
-      onPanResponderRelease: (_, gestureState) => {
-        if (gestureState.dy > 100) {
-          handleCloseInfo();
-        } else {
-          Animated.spring(infoPosition, {
-            toValue: 1,
-            useNativeDriver: false,
-          }).start();
+  const MapScreen = () => {
+    // Marcadores estáticos (opcionalmente puedes eliminarlos si los tomas directamente de la base de datos)
+    const [trees, setTrees] = useState([]); // Estado para almacenar los árboles con sus coordenadas
+  
+    useEffect(() => {
+      const fetchTrees = async () => {
+        try {
+          const { data, error } = await supabase
+            .from('arbol')
+            .select('id, nombre, latitud, longitud'); // Obtén los datos que necesitas, incluyendo coordenadas
+  
+          if (error) {
+            throw error;
+          }
+  
+          setTrees(data); // Guarda los árboles en el estado
+        } catch (error) {
+          Alert.alert('Error', 'No se pudieron cargar los árboles.');
+          console.log(error);
         }
-      },
-    })
-  ).current;
+      };
+      console.log(trees);
+  
+      fetchTrees(); // Llama a la función para obtener los datos cuando el componente se monte
+    }, []); // Solo se ejecuta una vez cuando el componente se monta
+  }
 
   return (
     <View style={styles.container}>
       <MapView
-        ref={mapRef} // Agrega la referencia aquí
+        ref={mapRef}
         style={styles.map}
         initialRegion={Initial_Region}
         provider={PROVIDER_GOOGLE}
         showsUserLocation
         showsMyLocationButton={false}
       >
+
+        {/* Muestra los marcadores obtenidos de Supabase */}
+        {trees.map((tree) => (
+          <Marker
+            key={tree.id}
+            coordinate={{ latitude: tree.latitud, longitude: tree.longitud }}
+            title={tree.nombre}
+            description={`ID: ${tree.id}`} // Puedes agregar más detalles si lo deseas
+          />
+        ))}
+
+        {/* Marcadores originales */}
         <Marker
           draggable
           coordinate={origin}
@@ -180,13 +173,14 @@ export default function MapaScreen() {
         />
       </MapView>
 
-      <Animated.View style={[styles.buttonContainer, { transform: [{ translateY: buttonsTranslateY }] }]}>
+      {/* Botones flotantes */}
+      <View style={styles.buttonContainer}>
+
         <TouchableOpacity style={styles.locateButton} onPress={handleLocatePress}>
           <Text style={styles.buttonText}>
             <TabBarIcon name="locate" color="#fff" />
           </Text>
         </TouchableOpacity>
-
         <TouchableOpacity style={styles.alertButton}>
           <Link href="/TreeRegistration">
             <Text style={styles.buttonText}>
@@ -194,24 +188,36 @@ export default function MapaScreen() {
             </Text>
           </Link>
         </TouchableOpacity>
-      </Animated.View>
+      </View>
+        
 
-      {showInfo && (
-        <Animated.View
-          {...panResponder.panHandlers}
-          style={[styles.infoContainer, { transform: [{ translateY: infoTranslateY }] }]}
-        >
+      {/* BottomSheet para información */}
+      <BottomSheet
+        isVisible={isBottomSheetVisible}
+        onBackdropPress={handleCloseInfo}
+        scrollViewProps={{ showsVerticalScrollIndicator: true }} // Muestra la barra de scroll vertical
+      >
+        <View style={styles.infoContainer}>
           <Text style={styles.infoText}>{selectedMarker} seleccionado 🌳</Text>
-          <TouchableOpacity onPress={handleCloseInfo}>
-            <TouchableOpacity style={styles.animatedButton} onPress={handleLocatePress}>
+          <Text> <TabBarIcon name="information-circle-outline" color="black" /> </Text>
+          <ThemedView style={styles.buttonGridContainer}>
+            {/* Botón para Información del árbol */}
+            <TouchableOpacity style={styles.animatedButton}>
               <Link href="/InfoTree">
                 <Text style={styles.buttonText}>Info</Text>
               </Link>
             </TouchableOpacity>
-            <Text style={styles.closeButton}>Cerrar</Text>
-          </TouchableOpacity>
-        </Animated.View>
-      )}
+
+            <TouchableOpacity style={styles.animatedButtonclose} onPress={handleCloseInfo}>
+              <Text style={styles.buttonText}>Cerrar</Text>
+            </TouchableOpacity>
+          </ThemedView>
+
+          <Text>Latitud: {origin.latitude}</Text>
+          <Text>Longitud: {origin.longitude}</Text>
+          <Text>Imágenes del Árbol</Text>
+        </View>
+      </BottomSheet>
     </View>
   );
 }
@@ -227,56 +233,69 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
+  buttonContainer: {
+    position: 'absolute',
+    bottom: 100,
+    right: 20,
+  },
   locateButton: {
-    bottom: -60,
-    left: 150,
-    backgroundColor: '#dfca8e',
+    backgroundColor: '#42a5f5',
+    borderRadius: 50,
     padding: 10,
-    borderRadius: 60,
+    marginBottom: 10,
   },
   animatedButton: {
     backgroundColor: '#1e90ff',
     padding: 10,
     borderRadius: 10,
+    marginTop: 10,
+  },
+  animatedButtonclose: {
+    backgroundColor: '#ff0000',
+    padding: 10,
+    borderRadius: 10,
+    marginTop: 10,
   },
   alertButton: {
-    bottom: 70,
-    left: 150,
-    backgroundColor: '#1c99cb',
-    padding: 10,
+    backgroundColor: '#1abb3a',
     borderRadius: 50,
+    padding: 10,
   },
   buttonText: {
+    fontSize: 18,
     color: '#fff',
-    fontWeight: 'bold',
-  },
-  buttonContainer: {
-    position: 'absolute',
-    bottom: 50,
-    left: 20,
-    right: 20,
-    alignItems: 'center',
   },
   infoContainer: {
-    position: 'absolute',
-    bottom: 15,
-    backgroundColor: 'white',
-    padding: 10,
-    borderRadius: 8,
-    elevation: 5,
-    width: '95%',
-    height: 300,
+    backgroundColor: '#fff',
+    padding: 12,
     alignItems: 'center',
+    margin: 5,
+    borderRadius: 10,
+    width: "98%",
   },
   infoText: {
+    fontSize: 22,
+    fontWeight: 'bold',
     color: '#000',
   },
-  closeButton: {
-    color: '#1e90ff',
-    marginTop: 5,
-  },
   markerImage: {
-    width: 35,
-    height: 35
-  }
+    width: 30,
+    height: 30,
+  },
+  buttonGridContainer: {
+    backgroundColor: '#fff',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    marginTop: 5,
+    gap: 10,
+  },
+  returnBoton: {
+    backgroundColor: '#1abb3a',
+    borderRadius: 50,
+  },
+
 });
+
+
+

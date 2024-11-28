@@ -29,7 +29,7 @@
     "plugins": [
       "expo-router",
       [
-      "expo-barcode-scanner",
+        "expo-barcode-scanner",
         {
           "cameraPermission": "Allow $(PRODUCT_NAME) to access camera."
         }
@@ -51,20 +51,18 @@
         }
       ],
       [
-        
         "@rnmapbox/maps",
         {
           "RNMapboxMapsDownloadToken": "sk.ey.."
         }
-        
       ],
       [
         "expo-location",
         {
           "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
         }
-      ]
-      
+      ],
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true

@@ -7,12 +7,13 @@ import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 
-import { useState, useEffect } from 'react';
-import { supabase } from '../../lib/supabase';
+//import { useState, useEffect } from 'react';
+//import { supabase } from '../../lib/supabase';
 
 
 export default function TabTwoScreen() {
 
+{/*
   const [arbol, setPosts] = useState([]);
 
   useEffect (() => {
@@ -31,6 +32,7 @@ export default function TabTwoScreen() {
     }, []);
   
     console.log(arbol)
+*/}
 
   return (
     <ParallaxScrollView

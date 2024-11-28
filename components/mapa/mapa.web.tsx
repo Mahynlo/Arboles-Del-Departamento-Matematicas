@@ -1,78 +1,127 @@
-import React, { useEffect } from "react";
-import { Platform, View, StyleSheet, TouchableOpacity } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Platform, View, StyleSheet, TouchableOpacity, Text, Image } from "react-native";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { Link, useRouter } from 'expo-router';
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
-import { Colors } from "react-native/Libraries/NewAppScreen";
-import Constants  from "expo-constants";
-
-
-// Importar componentes específicos según la plataforma
+import Constants from "expo-constants";
+import GalleryTree from "../arbol/GalleryTree";
 const Mapbox = Platform.OS === "web" ? require("mapbox-gl") : null;
 const Token = process.env.EXPO_PUBLIC_MAPBOX_TOKEN;
 
-// Configuración inicial para cada plataforma
 if (Platform.OS === "web") {
     Mapbox.accessToken = Token;
-} else {
-    Mapbox.default.setAccessToken(Token);
 }
+
+const markers = [
+    { id: 1, coordinates: [-110.9609, 29.0807], title: "Árbol 1", description: "Descripción del Árbol 1" },
+    { id: 2, coordinates: [-110.960714, 29.080637], title: "Árbol 2", description: "Descripción del Árbol 2" },
+    { id: 3, coordinates: [-110.960795, 29.080620], title: "Árbol 3", description: "Descripción del Árbol 3" },
+    { id: 4, coordinates: [-110.9609, 29.0808], title: "Árbol 4", description: "Descripción del Árbol 4" },
+];
 
 export default function MapaScreen() {
     const router = useRouter();
+    interface Tree {
+        id: number;
+        coordinates: number[];
+        title: string;
+        description: string;
+    }
+    
+    const [selectedTree, setSelectedTree] = useState<Tree | null>(null);
+    const [map, setMap] = useState<typeof Mapbox.Map | null>(null);
 
     useEffect(() => {
-        if (Platform.OS === "web") {
-            const map = new Mapbox.Map({
+        if (Platform.OS === "web" && Mapbox) {
+            const mapInstance = new Mapbox.Map({
                 container: "map",
                 style: "mapbox://styles/mapbox/streets-v11",
-                center: [-111, 29],
-                zoom: 8,
-
+                center: [-110.967847, 29.098678],
+                zoom: 11,
             });
 
-            // Crear un elemento de imagen para usar como marcador
-            const markerElement = document.createElement('div');
-            markerElement.style.width = '32px';
-            markerElement.style.height = '32px';
-            markerElement.style.backgroundImage = 'url(./assets/images/TreeIcon.png)'; // Ruta de tu imagen
-            markerElement.style.backgroundSize = 'cover';
+            markers.forEach(markerData => {
+                const markerElement = document.createElement('div');
+                markerElement.style.width = '32px';
+                markerElement.style.height = '32px';
+                markerElement.style.backgroundImage = 'url(./assets/images/TreeIcon.png)';
+                markerElement.style.backgroundSize = 'cover';
 
-            // Crear el marcador en las coordenadas especificadas
-            const marker = new Mapbox.Marker(markerElement)
-            .setLngLat([-110.96098674615973, 29.080701943862167])
-            .setPopup(new Mapbox.Popup().setHTML(`
-                <div>
-                    <h1>Localizacion del Árbol</h1>
-                    <button id="navigateButton" style="padding:5px; margin-top:5px; ">Informacion</button>
-                </div>
-            `))
-            .addTo(map);
+                const marker = new Mapbox.Marker(markerElement)
+                    .setLngLat(markerData.coordinates)
+                    .setPopup(new Mapbox.Popup().setHTML(`
+                        <div>
+                            <h1>${markerData.title}</h1>
+                            <button id="navigateButton-${markerData.id}" style="padding:5px; margin-top:5px;">Ver Información</button>
+                        </div>
+                    `))
+                    .addTo(mapInstance);
 
-            marker.getPopup().on('open', () => {
-                // Usamos un setTimeout para asegurarnos de que el botón esté disponible en el DOM
-                setTimeout(() => {
-                    const navigateButton = document.getElementById("navigateButton");
-                    if (navigateButton) {
-                        navigateButton.addEventListener("click", () => {
-                            if (window.location.pathname !== "/InfoTree") { // Evita redirecciones innecesarias al mismo lugar
+                marker.getPopup().on('open', () => {
+                    setSelectedTree(markerData);
+                    setTimeout(() => {
+                        const navigateButton = document.getElementById(`navigateButton-${markerData.id}`);
+                        if (navigateButton) {
+                            navigateButton.addEventListener("click", () => {
                                 router.push("/InfoTree");
-                            }
-                        });
-                    }
-                }, 0); // 0 ms asegura que se ejecute después de la inserción del popup
+                            });
+                        }
+                    }, 0);
+                });
+
+                marker.getPopup().on('close', () => {
+                    setSelectedTree(null);
+                });
             });
+
+            setMap(mapInstance);
+
+            return () => {
+                mapInstance.remove();
+            };
         }
     }, [router]);
+
+    const zoomIn = () => {
+        if (map) map.zoomIn();
+    };
+
+    const zoomOut = () => {
+        if (map) map.zoomOut();
+    };
 
     return (
         <View style={styles.container}>
             <div id="map" style={styles.mapWeb} />
+
+            {selectedTree && (
+                <View style={styles.infoPanel}>
+                    <Text style={styles.treeTitle}>{selectedTree.title}</Text>
+                    <Text style={styles.treeDescription}>{selectedTree.description}</Text>
+                    <TouchableOpacity style={styles.infoButton} onPress={() => router.push("/InfoTree")}>
+                        <Text style={styles.infoButtonText}>Ir a InfoTree</Text>
+                    </TouchableOpacity>
+                    <Text>Latitud: {selectedTree.coordinates[1]}</Text>
+                    <Text>Longitud: {selectedTree.coordinates[0]}</Text>
+                    <Text>Imagenes del Arbol</Text>
+                    <GalleryTree /> 
+                </View>
+            )}
+
             <TouchableOpacity style={styles.addButton}>
                 <Link href="/TreeRegistration">
                     <TabBarIcon name="add" />
                 </Link>
             </TouchableOpacity>
+
+            <View style={styles.zoomContainer}>
+                <TouchableOpacity onPress={zoomIn} style={styles.zoomButton}>
+                    <Text style={styles.zoomText}>+</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={zoomOut} style={styles.zoomButton}>
+                    <Text style={styles.zoomText}>-</Text>
+                </TouchableOpacity>
+            </View>
         </View>
     );
 }
@@ -85,6 +134,40 @@ const styles = StyleSheet.create({
         width: "100%",
         height: "100%",
     },
+    infoPanel: {
+        position: 'absolute',
+        top: 10,
+        left: 5,
+        width: "30%",
+        height: "93%",
+        backgroundColor: '#fff',
+        padding: 15,
+        borderRadius: 5,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 5,
+    },
+    treeTitle: {
+        fontSize: 22,
+        fontWeight: 'bold',
+        marginBottom: 5,
+    },
+    treeDescription: {
+        fontSize: 14,
+        color: '#555',
+        marginBottom: 10,
+    },
+    infoButton: {
+        backgroundColor: '#1c99cb',
+        padding: 10,
+        borderRadius: 5,
+        alignItems: 'center',
+    },
+    infoButtonText: {
+        color: '#fff',
+        fontWeight: 'bold',
+    },
     addButton: {
         position: 'absolute',
         right: 20,
@@ -95,5 +178,34 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
+    zoomContainer: {
+        position: 'absolute',
+        right: 28,
+        top: 500,
+        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+        borderRadius: 10,
+        overflow: 'hidden',
+    },
+    zoomButton: {
+        padding: 10,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderBottomWidth: 1,
+        borderBottomColor: '#ddd',
+    },
+    zoomText: {
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
+    reactLogo: {
+        height: 280,
+        width: '100%',
+        resizeMode: 'cover',
+    },
 });
+
+
+
+
+
 

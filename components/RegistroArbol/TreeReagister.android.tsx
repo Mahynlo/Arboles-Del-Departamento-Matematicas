@@ -1,16 +1,21 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ScrollView,Image } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ScrollView, Image, Button } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import QRCode from 'react-native-qrcode-svg';
 import * as FileSystem from 'expo-file-system';
 import * as MediaLibrary from 'expo-media-library';
 import { supabase } from '../../lib/supabase';
+import { ThemedView } from '../ThemedView';
+import { ScannerCamera, savePicture } from "../../components/fotos/CapturarImagen";
+import { TabBarIcon } from '../navigation/TabBarIcon';
+import { TreeCordenandas } from '../TreeCordenandas';
+
 
 export default function TreeRegister() {
     const [nombre, setTreeName] = useState('');
     const [nombre_cientifico, setScientific] = useState('');
-    //const [descripcion, setDescription] = useState('');
+    const [Comentarios, setComentarios] = useState('');
     const [tipo_sitio, setSite] = useState('');
     const [dendometria, setDendometry] = useState('');
     const [estado_salud, setHealth] = useState('');
@@ -19,12 +24,31 @@ export default function TreeRegister() {
     const [location, setLocation] = useState({ latitude: 37.78825, longitude: -122.4324 });
     const [isQRActive, setIsQRActive] = useState(false);
 
-    const [region, setRegion] = useState({
-        latitude: 29.0809,
-        longitude: -110.961,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
-    });
+    // para captura de la imagen 
+    const [isCameraVisible, setCameraVisible] = useState(false);
+    const [capturedImage, setCapturedImage] = useState<string | null>(null);
+
+    //cpmopnetente de ubicacion
+    const [mapVisible, setMapVisible] = useState(false);
+
+    const handleCordenadas = (latitude: number, longitude: number) => {
+        console.log('Ubicación seleccionada:', latitude, longitude);
+        // Aquí puedes hacer lo que necesites con las coordenadas
+        setLocation({ latitude, longitude });
+    };
+
+    const handleCloseMap = () => {
+        setMapVisible(false);
+    };
+
+
+
+    //const [region, setRegion] = useState({
+    //    latitude: 37.78825,
+    //    longitude: -122.4324,
+    //    latitudeDelta: 0.0922,
+    //    longitudeDelta: 0.0421,
+    //});
 
     const qrRef = useRef<any>(null);
 
@@ -41,11 +65,11 @@ export default function TreeRegister() {
                 latitude: location.coords.latitude,
                 longitude: location.coords.longitude,
             });
-            setRegion({
-                ...region,
-                latitude: location.coords.latitude,
-                longitude: location.coords.longitude,
-            });
+            //setRegion({
+            //    ...region,
+            //    latitude: location.coords.latitude,
+            //    longitude: location.coords.longitude,
+            //});
         })();
     }, []);
 
@@ -61,7 +85,7 @@ export default function TreeRegister() {
         if (qrRef.current) {
             qrRef.current.toDataURL(async (data: string) => {
                 alert("Nombre");
-                const filePath = `${FileSystem.cacheDirectory}tree_qr_code.png`;
+                const filePath = `${FileSystem.cacheDirectory}tree_qr_code.png`; // Ruta de la imagen en la carpeta de caché del dispositivo 
 
                 try {
                     await FileSystem.writeAsStringAsync(filePath, data, {
@@ -75,7 +99,7 @@ export default function TreeRegister() {
                     }
 
                     const asset = await MediaLibrary.createAssetAsync(filePath);
-                    await MediaLibrary.createAlbumAsync('TreeQRCode', asset, false);
+                    await MediaLibrary.createAlbumAsync('TreeQRCode', asset, false); // Crea un álbum en la galería del dispositivo
 
                     Alert.alert('Success', 'QR Code saved to gallery!');
                 } catch (error) {
@@ -92,118 +116,194 @@ export default function TreeRegister() {
     };
 
     const saveTreeToSupabase = async () => {
-        const { data, error } = await supabase
-            .from('arbol')
-            .insert({
-                nombre,
-                nombre_cientifico,
-                //descripcion,
-                tipo_sitio,
-                dendometria,
-                estado_salud,
-                conflictos,
-                riesgo,
-                latitud: location.latitude,
-                longitud: location.longitude
-            });
+        try{
+            const { data, error } = await supabase
+                .from('arbol')
+                .insert({
+                    nombre,
+                    nombre_cientifico,
+                    //descripcion,
+                    tipo_sitio,
+                    dendometria,
+                    estado_salud,
+                    conflictos,
+                    riesgo,
+                    latitud: location.latitude,
+                    longitud: location.longitude
+                })
+                .select('id_arbol') // Recupera el ID generado
+                .single(); // Asegura que devuelve un solo registro;
 
-        if (error) {
-            Alert.alert('Error', 'No se pudo registrar el árbol en la base de datos.');
-            console.log(error);
-        } else {
-            Alert.alert('Éxito', 'Árbol registrado en la base de datos.');
+                if (error) {
+                    Alert.alert('Error', 'No se pudo registrar el árbol en la base de datos.');
+                    console.log(error);
+                    return null; // Devuelve null si hay un error
+                }
+        
+                Alert.alert('Éxito', 'Árbol registrado en la base de datos.');
+                return data.id_arbol; // Retorna el ID del árbol
+        } catch (error) {
+            console.error('Error general:', error);
+            return null;
         }
     };
+
+    const saveTreeAndPicture = async () => {
+        const treeId = await saveTreeToSupabase(); // Registrar el árbol y obtener el ID
+        console.log(treeId)
+        if (!treeId) {
+          Alert.alert('Error', 'No se pudo registrar el árbol.');
+          return;
+        }
+      
+        if (capturedImage) {
+          // Guardar la imagen utilizando el ID del árbol
+          await savePicture(capturedImage, treeId);
+          console.log(treeId);
+        } else {
+          Alert.alert('Error', 'No se ha capturado una imagen.');
+        }
+      };
+      
+
 
     return (
         <ScrollView contentContainerStyle={styles.scrollContainer}>
             <View style={styles.container}>
-                <Text style={styles.title}>Registrar Árbol</Text>
+                <Text style={styles.subHeader}><TabBarIcon name='caret-forward-sharp' />Preguntas Referentes al arbol</Text>
+                <ThemedView style={styles.stepContainermap}>
+                    
+                    {/*Para el nombre del arbol*/}
+                    <Text>Nombre del arbol:</Text>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Nombre del Árbol"
+                        value={nombre}
+                        onChangeText={setTreeName}
+                    />
+                    {/*Para el nombre cientifico*/}
+                    <Text>Nombre Científico:</Text>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Nombre Científico"
+                        value={nombre_cientifico}
+                        onChangeText={setScientific}
+                    />
+                    {/*Para la descripcion*/}
+                    <Text>Tipo De Sitio:</Text>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Tipo De Sitio"
+                        value={tipo_sitio}
+                        onChangeText={setSite}
+                    />
+                    {/*Para la dendrometria*/}
+                    <Text>Dendrometría:</Text>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Dendrometría"
+                        value={dendometria}
+                        onChangeText={setDendometry}
+                    />
+                    {/*Para el estado de salud*/}
+                    <Text>Estado De Salud:</Text>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Estado De Salud"
+                        value={estado_salud}
+                        onChangeText={setHealth}
+                    />
+                    {/*Para conflictos*/}
+                    <Text>Conflictos:</Text>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Conflictos"
+                        value={conflictos}
+                        onChangeText={setIssues}
+                    />
+                    {/*Para riesgo*/}
+                    <Text>Riesgo:</Text>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Riesgo"
+                        value={riesgo}
+                        onChangeText={setRisk}
+                    />
+                    {/*Para comentarios*/}
+                    <Text>Comentarios:</Text>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Comentarios"
+                        value={Comentarios}
+                        onChangeText={setComentarios}
+                    />
+                </ThemedView>
+                {/*Para la captura de la imagen*/}
 
-                <TextInput
-                    style={styles.input}
-                    placeholder="Nombre del Árbol"
-                    value={nombre}
-                    onChangeText={setTreeName}
-                />
+                <Text style={styles.subHeader}><TabBarIcon name='caret-forward-sharp' />Captura de imagen del arbol</Text>
+                <ThemedView style={styles.stepContainermap}>
+                    <Button title="Abrir Cámara" onPress={() => setCameraVisible(true)} />
 
-                <TextInput
-                    style={styles.input}
-                    placeholder="Nombre Científico"
-                    value={nombre_cientifico}
-                    onChangeText={setScientific}
-                />
+                    <Text style={styles.mapLabel}>Imagen capturada:</Text>
+                    {capturedImage && (
+                        <Image source={{ uri: capturedImage }} style={{ width: 300, height: 300, marginLeft: 30 }} />
+                    )}
+                    <ScannerCamera
+                        isVisible={isCameraVisible}
+                        onCapture={(uri) => setCapturedImage(uri)}
+                        onClose={() => setCameraVisible(false)}
+                    />
+                </ThemedView>
+                {/*Para la ubicacion del arbol*/}
 
-                {/*<TextInput
-                    style={styles.input}
-                    placeholder="Descripcion"
-                    value={descripcion}
-                    onChangeText={setDescription}
-                />*/}
+                <Text style={styles.subHeader}><TabBarIcon name='caret-forward-sharp' />Ubicacion del arbol</Text>
+                <ThemedView style={styles.stepContainermap}>
+                    <Text style={styles.mapLabel}>Selecciona la Ubicacion del Arbol:</Text>
+                    <Button title="Seleccionar Ubicación" onPress={() => setMapVisible(true)} />
+                    <TreeCordenandas
+                        isVisible={mapVisible}
+                        onCordenadas={handleCordenadas}
+                        onClose={handleCloseMap}
+                    />
+                    <Text>Ubicacion del arbol:</Text>
+                    <Text>Latitud: {location.latitude}</Text>
+                    <Text>Longitud: {location.longitude}</Text>
 
-                <TextInput
-                    style={styles.input}
-                    placeholder="Tipo De Sitio"
-                    value={tipo_sitio}
-                    onChangeText={setSite}
-                />
+                    <MapView
+                        style={styles.map}
+                        region={{
+                            latitude: location.latitude,
+                            longitude: location.longitude,
+                            latitudeDelta: 0.01,
+                            longitudeDelta: 0.01,
+                        }}
+                        draggable={false} // Deshabilitar arrastrar el mapa
+                        showsMyLocationButton={true} // Mostrar el botón para localizar la ubicación
+                        showsUserLocation={false} // Deshabilitar mostrar la ubicación del usuario
 
-                <TextInput
-                    style={styles.input}
-                    placeholder="Dendrometría"
-                    value={dendometria}
-                    onChangeText={setDendometry}
-                />
+                        onPress={() => { }}
+                    >
+                        <Marker coordinate={location}>
+                            <Image source={require('@/assets/images/TreeIcon.png')} style={styles.markerImage} />
+                        </Marker>
+                    </MapView>
+                </ThemedView>
 
-                <TextInput
-                    style={styles.input}
-                    placeholder="Estado De Salud"
-                    value={estado_salud}
-                    onChangeText={setHealth}
-                />
+                <ThemedView style={styles.stepContainerButton}>
+                    <TouchableOpacity style={styles.button} onPress={generateQRCode}>
+                        <Text style={styles.buttonText}>Generate QR Code</Text>
+                    </TouchableOpacity>
 
-                <TextInput
-                    style={styles.input}
-                    placeholder="Conflictos"
-                    value={conflictos}
-                    onChangeText={setIssues}
-                />
+                    <TouchableOpacity onPress={saveTreeAndPicture} style={styles.button}>
+                        <Text style={styles.button}>Guardar Árbol e Imagen</Text>
+                    </TouchableOpacity>
 
-                <TextInput
-                    style={styles.input}
-                    placeholder="Riesgo"
-                    value={riesgo}
-                    onChangeText={setRisk}
-                />
-
-                <Text style={styles.mapLabel}>Select Tree Location on Map:</Text>
-                <MapView
-                    style={styles.map}
-                    //region={region}
-                    onPress={onMapPress}
-                    showsUserLocation
-                    showsMyLocationButton
-                >
-                    <Marker coordinate={location} title="Ubicacion del arbol">{/*description={descripcion}*/}
-                    <Image
-            source={require('@/assets/images/TreeIcon.png')}
-            style={styles.markerImage}
-          />
-                    </Marker>
-                </MapView>
-
-                <TouchableOpacity style={styles.button} onPress={generateQRCode}>
-                    <Text style={styles.buttonText}>Generate QR Code</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.button} onPress={saveTreeToSupabase}>
-                            <Text style={styles.buttonText}>Guardar en Base de Datos</Text>
-                </TouchableOpacity>
+                </ThemedView>
 
                 {isQRActive && (
                     <View style={styles.qrCodeContainer}>
                         <QRCode
-                            value={`Nombre: ${nombre}\nNombre Científico: ${nombre_cientifico}\nTipo de Sitio: ${tipo_sitio}\nDendrometría: ${dendometria}\nEstado de Salud: ${estado_salud}\nConflictos: ${conflictos}\nRiesgo: ${riesgo}\nUbicación:`}//${location.latitude}, ${location.longitude}
+                            value={`Nombre: ${nombre}\nNombre Científico: ${nombre_cientifico}\nTipo de Sitio: ${tipo_sitio}\nDendrometría: ${dendometria}\nEstado de Salud: ${estado_salud}\nConflictos: ${conflictos}\nRiesgo: ${riesgo}\nUbicación: ${location.latitude}, ${location.longitude}`}
                             size={256}
                             color="black"
                             backgroundColor="white"
@@ -217,10 +317,8 @@ export default function TreeRegister() {
             </View>
         </ScrollView>
     );
-
-
-
 }
+
 
 const styles = StyleSheet.create({
     scrollContainer: {
@@ -263,6 +361,9 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         alignItems: 'center',
     },
+    stepContainerButton: {
+        gap: 12,
+    },
     buttonText: {
         color: '#fff',
         fontSize: 18,
@@ -274,5 +375,19 @@ const styles = StyleSheet.create({
     markerImage: {
         width: 35,
         height: 35
-      }
+    },
+    subHeader: {
+        backgroundColor: "#25be10",
+        color: "white",
+        textAlign: "center",
+        paddingVertical: 10,
+        marginBottom: 20,
+        fontSize: 18,
+    },
+    stepContainermap: {
+        marginBottom: 20,
+        padding: 10,
+        backgroundColor: "#f0f0f0",
+        borderRadius: 10,
+    },
 });
