@@ -18,7 +18,7 @@ export default function HomeScreen() {
       headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
       headerImage={
         <Image
-          source={require('@/assets/images/Arbol_de_prueba.jpg')}
+          source={require('../../assets/images/Arbol_de_prueba.jpg')}
           style={styles.reactLogo}
         />
       }>
@@ -89,27 +89,14 @@ export default function HomeScreen() {
             <Card
               title="Informacion de Árboles"
               description="Estadisticas de Los Árboles registrados."
-              imageUrl="./assets/images/Arbol_de_prueba.jpg"
+              imageUrl={require('../../assets/images/Arbol_de_prueba.jpg')}
               onPress={() => alert('Montañas seleccionadas')}
             />
 
             <Card
               title="Mapas"
               description="Ve la distribucion de los árboles en el mapa."
-              imageUrl="./assets/images/Imagen_Mapa.jpg"
-              onPress={() => alert('Mapa seleccionado')}
-            />
-            <Card
-              title="Informacion de Árboles"
-              description="Estadisticas de Los Árboles registrados."
-              imageUrl="./assets/images/Arbol_de_prueba.jpg"
-              onPress={() => alert('Montañas seleccionadas')}
-            />
-
-            <Card
-              title="Mapas"
-              description="Ve la distribucion de los árboles en el mapa."
-              imageUrl="./assets/images/Imagen_Mapa.jpg"
+              imageUrl={require('../../assets/images/Mapa_hillo.png')}
               onPress={() => alert('Mapa seleccionado')}
             />
 
@@ -123,7 +110,7 @@ export default function HomeScreen() {
               <Link href="https://github.com/Mahynlo/Arboles-Del-Departamento-Matematicas/tree/main" style={styles.footerLink}><TabBarIcon name="logo-github" color="#fff" style={styles.icon} /></Link>
             </ThemedView>
             <Link href="/" style={styles.footerLink}>Política de Privacidad</Link>
-            <ThemedText type="subtitle" style={styles.footerText}>© 2023 Departamento de Matemáticas</ThemedText>
+            <ThemedText type="subtitle" style={styles.footerText}>© 2024 Departamento de Matemáticas</ThemedText>
           </ThemedView>
         </ThemedView>
 

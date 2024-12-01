@@ -4,19 +4,9 @@ import { View, FlatList, Image, StyleSheet, TouchableOpacity, Modal, Button, Tex
 const GalleryTree = () => {
   // Ruta de las imágenes en el proyecto
   const imagePaths = [
-    require('../../assets/images/Arbol_de_prueba.jpg'),
-    require('../../assets/images/TreeIcon.png'),
-    require('../../assets/images/Arbol_de_prueba.jpg'),
-    require('../../assets/images/Arbol_de_prueba.jpg'),
-    require('../../assets/images/Arbol_de_prueba.jpg'),
-    require('../../assets/images/TreeIcon.png'),
-    require('../../assets/images/Arbol_de_prueba.jpg'),
-    require('../../assets/images/Arbol_de_prueba.jpg'),
-    require('../../assets/images/TreeIcon.png'),
-    require('../../assets/images/Arbol_de_prueba.jpg'),
-    require('../../assets/images/TreeIcon.png'),
-    require('../../assets/images/Arbol_de_prueba.jpg'),
-    // Añadir más imágenes si es necesario
+    require('@/assets/images/TreeIcon.png'),
+    require('@/assets/images/TreeIcon.png'),
+    require('@/assets/images/TreeIcon.png'),
   ];
 
   // Estado para manejar el índice de la imagen seleccionada y visibilidad del modal

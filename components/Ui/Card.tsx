@@ -4,14 +4,20 @@ import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 interface CardProps {
   title: string;
   description: string;
-  imageUrl: string;
+  imageUrl: string | number; // Admite `require` o URL remota
   onPress: () => void;
 }
 
 const Card: React.FC<CardProps> = ({ title, description, imageUrl, onPress }) => {
+  const isRemoteImage = typeof imageUrl === 'string';
+
   return (
     <TouchableOpacity style={styles.card} onPress={onPress}>
-      <Image source={{ uri: imageUrl }} style={styles.image} />
+      <Image 
+        source={isRemoteImage ? { uri: imageUrl } : imageUrl} 
+        style={styles.image} 
+        resizeMode="cover" 
+      />
       <View style={styles.content}>
         <Text style={styles.title}>{title}</Text>
         <Text style={styles.description}>{description}</Text>
@@ -30,11 +36,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 10,
     shadowOffset: { width: 0, height: 5 },
-    elevation: 3, // para sombra en Android
+    elevation: 3,
     marginVertical: 10,
     overflow: 'hidden',
     width: 300,
-    height:300,
+    height: 300,
   },
   image: {
     width: '100%',
