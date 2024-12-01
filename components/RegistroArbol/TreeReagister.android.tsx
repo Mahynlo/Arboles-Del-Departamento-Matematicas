@@ -7,7 +7,7 @@ import * as FileSystem from 'expo-file-system';
 import * as MediaLibrary from 'expo-media-library';
 import { supabase } from '../../lib/supabase';
 import { ThemedView } from '../ThemedView';
-import { ScannerCamera } from "@/components/fotos/CapturarImagen";
+import { ScannerCamera, savePicture } from "../../components/fotos/CapturarImagen";
 import { TabBarIcon } from '../navigation/TabBarIcon';
 import { TreeCordenandas } from '../TreeCordenandas';
 
@@ -294,9 +294,9 @@ export default function TreeRegister() {
                         <Text style={styles.buttonText}>Generate QR Code</Text>
                     </TouchableOpacity>
 
-                <TouchableOpacity style={styles.button} onPress={saveTreeToSupabase}>
-                            <Text style={styles.buttonText}>Guardar en Base de Datos</Text>
-                </TouchableOpacity>
+                    <TouchableOpacity onPress={saveTreeAndPicture} style={styles.button}>
+                        <Text style={styles.button}>Guardar Árbol e Imagen</Text>
+                    </TouchableOpacity>
 
                 </ThemedView>
 

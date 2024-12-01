@@ -7,10 +7,12 @@ import Constants from "expo-constants";
 import GalleryTree from "../arbol/GalleryTree";
 const Mapbox = Platform.OS === "web" ? require("mapbox-gl") : null;
 const Token = process.env.EXPO_PUBLIC_MAPBOX_TOKEN;
+import { supabase } from '../../lib/supabase';
 
 if (Platform.OS === "web") {
     Mapbox.accessToken = Token;
 }
+
 
 const markers = [
     { id: 1, coordinates: [-110.9609, 29.0807], title: "Árbol 1", description: "Descripción del Árbol 1" },
@@ -21,6 +23,31 @@ const markers = [
 
 export default function MapaScreen() {
     const router = useRouter();
+    const [selectedTree, setSelectedTree] = useState<Tree | null>(null);
+    const [map, setMap] = useState<typeof Mapbox.Map | null>(null);
+    const [markersData, setMarkersData] = useState([]);
+
+    useEffect(() => {
+        const fetchMarkers = async () => {
+            const { data, error } = await supabase
+                .from('arbol')
+                .select('id, latitud, longitud, nombre, descripcion');
+            
+            if (error) {
+                console.error('Error al obtener datos:', error);
+            } else {
+                // Mapear los datos para ajustarlos al formato necesario
+                const formattedData = data.map(arbol => ({
+                    id: arbol.id,
+                    coordinates: [arbol.longitud, arbol.latitud],
+                    title: arbol.nombre,
+                    description: arbol.descripcion,
+                }));
+                setMarkersData(formattedData);
+            }
+        };
+        fetchMarkers();
+    }, []);
     interface Tree {
         id: number;
         coordinates: number[];
@@ -28,9 +55,6 @@ export default function MapaScreen() {
         description: string;
     }
     
-    const [selectedTree, setSelectedTree] = useState<Tree | null>(null);
-    const [map, setMap] = useState<typeof Mapbox.Map | null>(null);
-
     useEffect(() => {
         if (Platform.OS === "web" && Mapbox) {
             const mapInstance = new Mapbox.Map({
@@ -40,27 +64,28 @@ export default function MapaScreen() {
                 zoom: 11,
             });
 
-            markers.forEach(markerData => {
+            markers.forEach(markers => {
                 const markerElement = document.createElement('div');
                 markerElement.style.width = '32px';
                 markerElement.style.height = '32px';
-                markerElement.style.backgroundImage = 'url(./assets/images/TreeIcon.png)'
+                markerElement.style.backgroundImage = 'url(https://semana.mat.uson.mx/~cursotacc/a219211930/prueba/TreeIcon.png)'
+                console.log(markerElement.style.backgroundImage);
                 markerElement.style.backgroundSize = 'cover';
 
                 const marker = new Mapbox.Marker(markerElement)
-                    .setLngLat(markerData.coordinates)
+                    .setLngLat(markers.coordinates)
                     .setPopup(new Mapbox.Popup().setHTML(`
                         <div>
-                            <h1>${markerData.title}</h1>
-                            <button id="navigateButton-${markerData.id}" style="padding:5px; margin-top:5px;">Ver Información</button>
+                            <h1>${markers.title}</h1>
+                            <button id="navigateButton-${markers.id}" style="padding:5px; margin-top:5px;">Ver Información</button>
                         </div>
                     `))
                     .addTo(mapInstance);
 
                 marker.getPopup().on('open', () => {
-                    setSelectedTree(markerData);
+                    setSelectedTree(markers);
                     setTimeout(() => {
-                        const navigateButton = document.getElementById(`navigateButton-${markerData.id}`);
+                        const navigateButton = document.getElementById(`navigateButton-${markers.id}`);
                         if (navigateButton) {
                             navigateButton.addEventListener("click", () => {
                                 router.push("/InfoTree");
