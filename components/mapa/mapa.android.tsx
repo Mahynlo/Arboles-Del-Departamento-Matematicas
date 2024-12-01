@@ -1,22 +1,19 @@
 import React from 'react';
 import * as Location from 'expo-location';
-import { Text, View, StyleSheet, TouchableOpacity, Image, Alert} from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import MapView, { Marker, Polygon, PROVIDER_GOOGLE } from 'react-native-maps';
 import { Link } from 'expo-router';
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import GalleryTree from "../arbol/GalleryTree";
 import { BottomSheet } from '@rneui/themed';
 import { ThemedView } from '@/components/ThemedView';
-import { supabase } from '../../lib/supabase';
-import { useState, useEffect } from 'react';
- 
 
-  const markers = [
-    { id: 1, coordinates: { latitude: 29.0807, longitude: -110.9609 }, title: "Árbol Del departamento", description: "Descripción del Árbol 1" },
-    { id: 2, coordinates: { latitude: 29.080637, longitude: -110.960714 }, title: "Árbol 2", description: "Descripción del Árbol 2" },
-    { id: 3, coordinates: { latitude: 29.080620, longitude: -110.960795 }, title: "Árbol 3", description: "Descripción del Árbol 3" },
-    { id: 4, coordinates: { latitude: 29.0808, longitude: -110.9609 }, title: "Árbol 4", description: "Descripción del Árbol 4" },
-  ];
+const markers = [
+  { id: 1, coordinates: { latitude: 29.0807, longitude: -110.9609 }, title: "Árbol Del departamento", description: "Descripción del Árbol 1" },
+  { id: 2, coordinates: { latitude: 29.080637, longitude: -110.960714 }, title: "Árbol 2", description: "Descripción del Árbol 2" },
+  { id: 3, coordinates: { latitude: 29.080620, longitude: -110.960795 }, title: "Árbol 3", description: "Descripción del Árbol 3" },
+  { id: 4, coordinates: { latitude: 29.0808, longitude: -110.9609 }, title: "Árbol 4", description: "Descripción del Árbol 4" },
+];
 
 export default function MapaScreen() {
   const [origin, setOrigin] = React.useState({
@@ -89,32 +86,6 @@ export default function MapaScreen() {
     }
   };
 
-  const MapScreen = () => {
-    // Marcadores estáticos (opcionalmente puedes eliminarlos si los tomas directamente de la base de datos)
-    const [trees, setTrees] = useState([]); // Estado para almacenar los árboles con sus coordenadas
-  
-    useEffect(() => {
-      const fetchTrees = async () => {
-        try {
-          const { data, error } = await supabase
-            .from('arbol')
-            .select('id, nombre, latitud, longitud'); // Obtén los datos que necesitas, incluyendo coordenadas
-  
-          if (error) {
-            throw error;
-          }
-  
-          setTrees(data); // Guarda los árboles en el estado
-        } catch (error) {
-          Alert.alert('Error', 'No se pudieron cargar los árboles.');
-          console.log(error);
-        }
-      };
-      console.log(trees);
-  
-      fetchTrees(); // Llama a la función para obtener los datos cuando el componente se monte
-    }, []); // Solo se ejecuta una vez cuando el componente se monta
-  }
 
   return (
     <View style={styles.container}>
@@ -126,17 +97,6 @@ export default function MapaScreen() {
         showsUserLocation
         showsMyLocationButton={false}
       >
-
-        {/* Muestra los marcadores obtenidos de Supabase */}
-        {trees.map((tree) => (
-          <Marker
-            key={tree.id}
-            coordinate={{ latitude: tree.latitud, longitude: tree.longitud }}
-            title={tree.nombre}
-            description={`ID: ${tree.id}`} // Puedes agregar más detalles si lo deseas
-          />
-        ))}
-
         {/* Marcadores originales */}
         <Marker
           draggable
@@ -165,6 +125,22 @@ export default function MapaScreen() {
             style={styles.markerImage}
           />
         </Marker>
+
+        {/* Marcadores adicionales */}
+        {markers.map((marker) => (
+          <Marker
+            key={marker.id}
+            coordinate={marker.coordinates}
+            title={marker.title}
+            description={marker.description}
+            onPress={() => handleMarkerPress(marker.title)}
+          >
+            <Image
+              source={require('@/assets/images/TreeIcon.png')}
+              style={styles.markerImage}
+            />
+          </Marker>
+        ))}
 
         <Polygon
           coordinates={[origin, destination]}
@@ -296,6 +272,5 @@ const styles = StyleSheet.create({
   },
 
 });
-
 
 

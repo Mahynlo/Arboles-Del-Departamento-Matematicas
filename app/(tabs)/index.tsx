@@ -9,9 +9,10 @@ import { Link } from 'expo-router';
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import Constants from 'expo-constants';
 import Card from "../../components/Ui/Card";
-
+import { PricingCard, lightColors } from '@rneui/themed';
 
 export default function HomeScreen() {
+  
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
@@ -32,24 +33,43 @@ export default function HomeScreen() {
           {Platform.OS === 'web' ? (
             <>
               Puedes ver la información de los árboles registrados en el Departamento de Matemáticas.
-
             </>
           ) : (
             <>
               Registra un árbol o ve la información de un árbol ya registrado
+
             </>
           )}
         </ThemedText>
       </ThemedView>
 
-      {/* Botones en grid */}
-      <ThemedView style={styles.buttonGridContainer}>
-        <ButtonLink href="/about" title="About" iconName="information-circle" color="#FF6347" />
-        <ButtonLink href="/scanerCamara" title="Camera screen" iconName="camera" color="#8A2BE2" />
-        <ButtonLink href="/mapa" title="Mapa" iconName="map" color="#4682B4" />
-        <ButtonLink href="/generadorQr" title="Generar de QR" iconName="qr-code" color="#FFD700" />
-        <ButtonLink href="/TreeRegistration" title="Registro de árbol" iconName="leaf" color="#32CD32" />
-      </ThemedView>
+      {Platform.OS === 'web' ? (
+        <>
+          {/* Botones en grid */}
+          <ThemedView style={styles.buttonGridContainer}>
+            <ButtonLink href="/about" title="About" iconName="information-circle" color="#FF6347" />
+            <ButtonLink href="/mapa" title="Mapa" iconName="map" color="#4682B4" />
+            <ButtonLink href="/generadorQr" title="Generar de QR" iconName="qr-code" color="#FFD700" />
+            <ButtonLink href='/camaraFoto' title="Tomar foto" iconName="camera" color="#FF6347" />
+          </ThemedView>
+        </>
+      ) : (
+
+        <>
+          {/* Botones en grid */}
+          <ThemedView style={styles.buttonGridContainer}>
+            <ButtonLink href="/about" title="About" iconName="information-circle" color="#FF6347" />
+            <ButtonLink href="/scanerCamara" title="Camera screen" iconName="camera" color="#8A2BE2" />
+            <ButtonLink href="/mapa" title="Mapa" iconName="map" color="#4682B4" />
+            <ButtonLink href="/generadorQr" title="Generar de QR" iconName="qr-code" color="#FFD700" />
+            <ButtonLink href="/TreeRegistration" title="Registro de árbol" iconName="leaf" color="#32CD32" />
+            <ButtonLink href='/camaraFoto' title="Tomar foto" iconName="camera" color="#FF6347" />
+
+          </ThemedView>
+        </>
+      )}
+
+
 
 
       {Platform.OS === 'web' ? (
@@ -92,23 +112,24 @@ export default function HomeScreen() {
               imageUrl="./assets/images/Imagen_Mapa.jpg"
               onPress={() => alert('Mapa seleccionado')}
             />
+
           </ThemedView>
 
 
           <ThemedView style={styles.footer}>
-            <ThemedText type="subtitle" style={styles.footerText}>© 2023 Departamento de Matemáticas</ThemedText>
             <ThemedView style={styles.footerIcons}>
               <Link href="/" style={styles.footerLink}><TabBarIcon name="mail-outline" color="#fff" style={styles.icon} /></Link>
               {/* GitHub en otra pestaña */}
               <Link href="https://github.com/Mahynlo/Arboles-Del-Departamento-Matematicas/tree/main" style={styles.footerLink}><TabBarIcon name="logo-github" color="#fff" style={styles.icon} /></Link>
             </ThemedView>
-
             <Link href="/" style={styles.footerLink}>Política de Privacidad</Link>
+            <ThemedText type="subtitle" style={styles.footerText}>© 2023 Departamento de Matemáticas</ThemedText>
           </ThemedView>
         </ThemedView>
 
       ) : (
         <>
+
 
         </>
       )}
@@ -201,7 +222,7 @@ const styles = StyleSheet.create({
   footerIcons: {
     flexDirection: 'row', // Alinea los botones en una fila
     flexWrap: 'wrap',
-    gap:10,
+    gap: 10,
   },
   // Web-specific Section
   webSectionContainer: {

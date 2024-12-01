@@ -8,12 +8,14 @@ import { Platform, TouchableOpacity, Text } from 'react-native';
 import { Link } from 'expo-router';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
+import HeaderLinks from '@/components/navigation/HeaderLinks'; // Importar componente de enlaces en el encabezado
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
+  const title= "ARDEMA TREE PROJECT";
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
@@ -31,48 +33,47 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
-        <Stack.Screen 
-          name="(tabs)" 
-          options={{ 
-            headerShown: false  
-          }} 
+        <Stack.Screen
+          name="(tabs)"
+          options={{
+            headerShown: false
+          }}
         />
-        <Stack.Screen 
-          name="about" 
-          options={{ 
-            title: 'About',
-            headerStyle: { backgroundColor: '#f4511e' },
+        <Stack.Screen
+          name="about"
+          options={{
+            title: Platform.OS === "web" ? title : 'About',
+            headerLeft: () => null, // No mostrar botón de regreso
+            headerTitleStyle: {
+              fontSize: 20,
+              fontWeight: 'bold',
+              color: '#fff',
+            },
+            headerStyle: { backgroundColor: '#3d80d4' },
             headerRight: () => (
-              Platform.OS === 'web' ? <HeaderLinks/> : <HeaderLinksMovil/> // Solo se muestra en web
+              Platform.OS === 'web' ? <HeaderLinks /> : <HeaderLinksMovil /> // Solo se muestra en web
             ),
-          
-          }} 
+
+          }}
         />
+        <Stack.Screen name="TreeRegistration" options={{
+          title: 'Registro de Árbol',
+          headerTitleStyle: {
+            fontSize: 20,
+            fontWeight: 'bold',  
+          },
+        }} />
+        <Stack.Screen name='settings' options={{
+          title: 'Configuración',
+        }} />
         <Stack.Screen name="+not-found" />
       </Stack>
     </ThemeProvider>
   );
 }
 
-// Componente para los enlaces en el encabezado
-function HeaderLinks() {
-  return (
-    <TouchableOpacity style={{ flexDirection: 'row', gap: 10, marginRight: 10 }}>
-      <Link href="/" style={{ marginHorizontal: 10 }}>
-        <Text style={{ color: '#fff' }}>Home</Text>
-      </Link>
-      <Link href="/mapa" style={{ marginHorizontal: 10 }}>
-        <Text style={{ color: '#fff' }}>Mapa</Text>
-      </Link>
-      <Link href="/explore" style={{ marginHorizontal: 10 }}>
-        <Text style={{ color: '#fff' }}>Explore</Text>
-      </Link>
-      
-    </TouchableOpacity>
-  );
-}
 
-function HeaderLinksMovil(){
+function HeaderLinksMovil() {
   return (
     <TouchableOpacity style={{ flexDirection: 'row', gap: 10, marginRight: 10 }}>
       <Link href="/settings" style={{ marginHorizontal: 10 }}>

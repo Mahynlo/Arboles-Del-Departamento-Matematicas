@@ -8,31 +8,30 @@ export default function AboutScreen() {
     <ScrollView contentContainerStyle={styles.container}>
       <ThemedView style={styles.contentContainer}>
         <ThemedText type="title" style={styles.title}>
-          About This App
+          Hcerca de esta aplicación 
         </ThemedText>
 
         <Text style={styles.text}>
-          This app was developed to help users interact with a variety of features, including
-          navigation, camera scanning, map exploration, and more. Our goal is to provide a
-          smooth and engaging experience, accessible across both web and mobile platforms.
+          Bienvenido a nuestra aplicación de árboles del Departamento de Matemáticas. Esta aplicación
+          tiene como objetivo proporcionar una experiencia interactiva y educativa para los usuarios 
+          interesados en conocer más sobre los árboles del Departamento de Matemáticas asi como sus características y ubicaciones.
         </Text>
 
-        <Text style={styles.sectionTitle}>Features:</Text>
+        <Text style={styles.sectionTitle}>Caracteristicas:</Text>
         <View style={styles.featuresList}>
-          <Text style={styles.featureItem}>- Easy navigation across screens</Text>
-          <Text style={styles.featureItem}>- QR code generator and scanner</Text>
-          <Text style={styles.featureItem}>- Map integration for exploration</Text>
-          <Text style={styles.featureItem}>- Camera access for capturing moments</Text>
+          <Text style={styles.featureItem}>- Mapa interactivo de la ubicacion de los arboles.</Text>
+          <Text style={styles.featureItem}>- Genreador de codigo QR para informacion de Árbol</Text>
+          <Text style={styles.featureItem}>- Estadisticas de arboles.</Text>
+          <Text style={styles.featureItem}>- Accseso a registro de arboles(Solo disponible en la version movil)</Text>
         </View>
 
-        <Text style={styles.sectionTitle}>Platform Adaptability:</Text>
+        <Text style={styles.sectionTitle}>Adaptabilidad de la Plataforma:</Text>
         <Text style={styles.text}>
-          The app is designed to work seamlessly on both mobile and web platforms. The UI and
-          features adapt based on the platform to ensure consistency and usability.
+        La aplicación está diseñada para funcionar sin problemas tanto en plataformas móviles como web. La interfaz de usuario y las funciones se adaptan según la plataforma para garantizar la coherencia y la facilidad de uso.
         </Text>
 
         <Text style={styles.footer}>
-          Thank you for using our app! We hope it enhances your experience and meets your needs.
+        ¡Gracias por utilizar nuestra aplicación! Esperamos que mejore su experiencia y satisfaga sus necesidades.
         </Text>
         {/*SI estamos en la version web o en movil*/}
         {Platform.OS === "web" ? (
@@ -72,7 +71,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
+    color:"#000",
     marginBottom: 15,
     textAlign: 'center',
   },

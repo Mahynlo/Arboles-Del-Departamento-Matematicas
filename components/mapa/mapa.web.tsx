@@ -44,7 +44,7 @@ export default function MapaScreen() {
                 const markerElement = document.createElement('div');
                 markerElement.style.width = '32px';
                 markerElement.style.height = '32px';
-                markerElement.style.backgroundImage = 'url(./assets/images/TreeIcon.png)';
+                markerElement.style.backgroundImage = 'url(./assets/images/TreeIcon.png)'
                 markerElement.style.backgroundSize = 'cover';
 
                 const marker = new Mapbox.Marker(markerElement)
@@ -203,9 +203,6 @@ const styles = StyleSheet.create({
         resizeMode: 'cover',
     },
 });
-
-
-
 
 
 
