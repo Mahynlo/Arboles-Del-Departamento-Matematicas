@@ -13,7 +13,7 @@ function HeaderLinks() {
         <TouchableOpacity style={{ flexDirection: 'row', gap: 10, marginRight: 10,alignItems: 'center' }}>
             <Link href="/" style={{ marginHorizontal: 10 }}>
                 <Text style={{
-                    color: isActive('/') ? '#ffd33d' : '#fff',
+                    color: isActive('/') ? '#ffd33d' : '#000',
                     borderWidth: isActive('/') ? 2 : 0,  // Añade borde si está activo
                     borderColor: '#ffd33d',  // Color del borde
                     paddingHorizontal: 10,  // Espaciado horizontal
@@ -24,25 +24,11 @@ function HeaderLinks() {
                     Home
                 </Text>
             </Link>
-            <Link href="/mapa" style={{ marginHorizontal: 20 }}>
-                <Text
-                    style={{
-                        color: isActive('/mapa') ? '#ffd33d' : '#fff',
-                        borderWidth: isActive('/mapa') ? 2 : 0,
-                        borderColor: '#ffd33d',
-                        paddingHorizontal: 10,
-                        paddingVertical: 5,
-                        borderRadius: 5,
-                        fontSize: 16,           // Tamaño de la fuente
-                    }}
-                >
-                    Mapa
-                </Text>
-            </Link>
+           
             <Link href="/explore" style={{ marginHorizontal: 10 }}>
                 <Text
                     style={{
-                        color: isActive('/explore') ? '#ffd33d' : '#fff',
+                        color: isActive('/explore') ? '#ffd33d' : '#000',
                         borderWidth: isActive('/explore') ? 2 : 0,
                         borderColor: '#ffd33d',
                         paddingHorizontal: 10,
@@ -57,7 +43,7 @@ function HeaderLinks() {
             <Link href="/about" style={{ marginHorizontal: 10 }}>
                 <Text
                     style={{
-                        color: isActive('/about') ? '#ffd33d' : '#fff',
+                        color: isActive('/about') ? '#ffd33d' : '#000',
                         borderWidth: isActive('/about') ? 2 : 0,
                         borderColor: '#ffd33d',
                         paddingHorizontal: 10,

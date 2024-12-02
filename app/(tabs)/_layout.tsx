@@ -24,10 +24,10 @@ export default function TabLayout() {
           headerTitleStyle: {
             fontSize: 20,
             fontWeight: 'bold',
-            color: '#fff',
+            color: '#000',
             fontFamily: 'YourCustomFont', // Asegúrate de que la fuente esté cargada
           },
-          headerStyle: { backgroundColor: '#3d80d4' },
+          headerStyle: { backgroundColor: '#fff' },
           headerRight: () => (  // Se muestra en la barra de navegación
             <HeaderLinks /> // Componente de enlaces
           ),
@@ -40,7 +40,7 @@ export default function TabLayout() {
             headerTitleStyle: {// Estilo del título
               fontSize: 20,
               fontWeight: 'bold',
-              color: '#fff',
+              color: '#000',
               fontFamily: 'YourCustomFont', // Asegúrate de que la fuente esté cargada
             },
             headerStyle: { backgroundColor: '#3d80d4' },

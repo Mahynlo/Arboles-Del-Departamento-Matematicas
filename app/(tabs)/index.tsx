@@ -1,212 +1,161 @@
-import { Image, StyleSheet, Platform, TouchableOpacity, Pressable } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { ComponentProps } from 'react';
-import { HelloWave } from '@/components/HelloWave';
-import { ScrollView } from 'react-native';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { Link } from 'expo-router';
-import { TabBarIcon } from '@/components/navigation/TabBarIcon';
-import Constants from 'expo-constants';
-import Card from "../../components/Ui/Card";
-import { PricingCard, lightColors } from '@rneui/themed';
+import React, { useState, useEffect, useRef } from "react";
+import { ScrollView, View, StyleSheet, Dimensions, useWindowDimensions, LayoutChangeEvent } from "react-native";
+import { ThemedText } from "@/components/ThemedText";
+import { ThemedView } from "@/components/ThemedView";
+import MapaScreen from "@/components/mapa/mapa.web";
+import TreeList from "@/components/TreeList";
 
 export default function HomeScreen() {
+  const { width, height } = useWindowDimensions();
+  const headerRef = useRef<View>(null);
+  const [headerHeight, setHeaderHeight] = useState(0);
+
+  const isMobile = width < 768;
+  const minimumContainerHeight = 600;
+
+  const handleHeaderLayout = (event: LayoutChangeEvent) => {
+    const { height: measuredHeight } = (event.nativeEvent as any).layout;
+    setHeaderHeight(measuredHeight);
+  };
+
+  const calculateAvailableHeight = () => {
+    const screenHeight = Dimensions.get('window').height;
+    const availableSpace = screenHeight - headerHeight - 110; // Subtracted an additional 50 pixels
+    return Math.max(availableSpace, minimumContainerHeight);
+  };
+
   return (
-    // <TreeList />
     <ScrollView contentContainerStyle={styles.scrollContainer}>
-      {/* Header Section */}
-      <ThemedView style={styles.header}>
-        <ThemedText type="title" style={styles.title}>
-          Árboles del Departamento de Matemáticas
-        </ThemedText>
-        <ThemedText type="subtitle" style={styles.subtitle}>
-          Explora, registra, y analiza la información de los árboles registrados.
-        </ThemedText>
-        {/* <Image
-          source={require('@/assets/images/Arbol_de_prueba.jpg')}
-          style={styles.headerImage}
-        /> */}
-      </ThemedView>
+      <View style={styles.container}>
+        {/* Header Section */}
+        <View ref={headerRef} style={styles.header} onLayout={handleHeaderLayout}>
+          <ThemedView style={styles.headercontainer}>
+            <ThemedText type="title" style={[styles.title, { fontSize: isMobile ? 32 : 48 }]}>
+              Árboles del Departamento de Matemáticas
+            </ThemedText>
+            <ThemedText type="subtitle" style={[styles.subtitle, { fontSize: isMobile ? 14 : 16 }]}>
+              Explora, registra, y analiza la información de los árboles registrados.
+            </ThemedText>
+          </ThemedView>
+        </View>
 
-      {/* Bento Box Section */}
-      <ThemedView style={styles.bentoBoxContainer}>
-        <ButtonLink
-          href="/about"
-          title="About"
-          iconName="information-circle"
-          color="#FF6347"
-        />
-        <ButtonLink
-          href="/mapa"
-          title="Mapa"
-          iconName="map"
-          color="#4682B4"
-        />
-        <ButtonLink
-          href="/generadorQr"
-          title="Generar QR"
-          iconName="qr-code"
-          color="#FFD700"
-        />
-        <ButtonLink
-          href="/TreeRegistration"
-          title="Registro de Árbol"
-          iconName="leaf"
-          color="#32CD32"
-        />
-        <ButtonLink
-          href="/camaraFoto"
-          title="Tomar Foto"
-          iconName="camera"
-          color="#8A2BE2"
-        />
-      </ThemedView>
+        {/* Dashboard Layout */}
+        {isMobile ? (
+          <View style={styles.mobileDashboard}>
+            <ThemedView style={[styles.mobileContainer, { minHeight: calculateAvailableHeight() }]}>
+              <ThemedText type="title" style={styles.containerTitle}>
+                Mobile Container 1
+              </ThemedText>
+            </ThemedView>
+            <ThemedView style={[styles.mobileContainer, { minHeight: calculateAvailableHeight() }]}>
+              {/* <ThemedText type="title" style={styles.containerTitle}>
+                Mobile Container 2
+              </ThemedText> */}
+              <TreeList />
+            </ThemedView>
+          </View>
+        ) : (
+          <View style={[styles.dashboardContainer, { minHeight: calculateAvailableHeight() }]}>
+            {/* Left Container */}
+            <ThemedView style={styles.leftContainer}>
+              {/* <ThemedText type="title" style={styles.containerTitle}>
+                Left Container
+              </ThemedText> */}
+              <MapaScreen />
+            </ThemedView>
 
-      {/* Placeholder for Graphs */}
-      <ThemedView style={styles.graphSection}>
-        <ThemedText type="subtitle" style={styles.graphTitle}>
-          Análisis y Estadísticas
-        </ThemedText>
-        {/* <View style={styles.graphPlaceholder}>
-          <ThemedText>Gráficos vendrán aquí...</ThemedText>
-        </View> */}
-      </ThemedView>
-
-      {/* Footer */}
-      <ThemedView style={styles.footer}>
-        <Link href="https://github.com/Mahynlo/Arboles-Del-Departamento-Matematicas/tree/main">
-          <TabBarIcon name="logo-github" color="#fff" />
-        </Link>
-        <Link href="/" style={styles.footerLink}>
-          Política de Privacidad
-        </Link>
-        <ThemedText style={styles.footerText}>
-          © 2023 Departamento de Matemáticas
-        </ThemedText>
-      </ThemedView>
+            {/* Right Container */}
+            <ThemedView style={styles.rightContainer}>
+              <ThemedText type="title" style={styles.containerTitle}>
+                Right Container
+              </ThemedText>
+              {/* <TreeList /> */}
+            </ThemedView>
+          </View>
+        )}
+      </View>
     </ScrollView>
-  );
-}
-
-interface ButtonLinkProps {
-  href: string;
-  title: string;
-  iconName?: ComponentProps<typeof Ionicons>['name'];
-  color: string;
-}
-
-function ButtonLink({ href, title, iconName, color }: ButtonLinkProps) {
-  return (
-    <ThemedView style={[styles.buttonCard, { backgroundColor: color }]}>
-      <Link href={href as any} style={styles.linkText}>
-        {iconName && <TabBarIcon name={iconName} color="#fff" style={styles.icon} />}
-        {title}
-      </Link>
-    </ThemedView>
   );
 }
 
 const styles = StyleSheet.create({
   scrollContainer: {
     flexGrow: 1,
+    minHeight: '100%',
+  },
+  container: {
+    flex: 1,
+    backgroundColor: "#DFECF2",
     padding: 16,
-    backgroundColor: '#DFECF2',
   },
   header: {
-    alignItems: 'flex-start',
+    alignItems: "flex-start",
     marginBottom: 16,
     padding: 16,
-    backgroundColor: '#DFECF2',
+    backgroundColor: "#DFECF2",
     borderRadius: 12,
+  },
+  headercontainer: {
+    backgroundColor: "#DFECF2",
   },
   title: {
-    fontSize: 48,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    color: '#333',
+    fontWeight: "bold",
+    textAlign: "center",
+    color: "#333",
   },
   subtitle: {
-    fontSize: 16,
-    color: '#666',
-    textAlign: 'center',
+    color: "#666",
+    textAlign: "left",
     marginVertical: 8,
   },
-  headerImage: {
-    width: '100%',
-    height: 200,
+  dashboardContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "stretch", // Ensure containers stretch vertically
+    gap: 16,
+  },
+  leftContainer: {
+    flex: 1, // Occupies 65% of horizontal space
+    backgroundColor: "#FFFFFF",
     borderRadius: 12,
-    marginTop: 8,
-    resizeMode: 'cover',
-  },
-  bentoBoxContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignContent: 'center', // Helps with tighter spacing
-    justifyContent: 'center',
-    gap: 4, // Very small gap
-    marginBottom: 24,
-    backgroundColor: '#DFECF2',
-    width: '100%',
-    paddingHorizontal: 0,
-  },
-  buttonCard: {
-    width: '20%', // 4 columns
-    paddingVertical: 10,
-    // paddingHorizontal: 200,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 10,
-    marginHorizontal: 20,
-    marginVertical: 10, // Consistent small margin
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOpacity: 0.2,
-    shadowOffset: { width: 0, height: 2 },
-  },
-  linkText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  graphSection: {
     padding: 16,
-    backgroundColor: '#D0E1E9',
-    borderRadius: 12,
     elevation: 2,
-    shadowColor: '#000',
-    shadowOpacity: 0.2,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
     shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 4,
   },
-  graphTitle: {
+  rightContainer: {
+    flex: 0.45, // Occupies 35% of horizontal space
+    backgroundColor: "#F8F9FA",
+    borderRadius: 12,
+    padding: 16,
+    elevation: 2,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 4,
+  },
+  mobileDashboard: {
+    flexDirection: "column", // Stack containers vertically on mobile
+    gap: 12,
+  },
+  mobileContainer: {
+    width: "100%",
+    backgroundColor: "#FFFFFF",
+    borderRadius: 12,
+    padding: 16,
+    elevation: 2,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 4,
+    marginBottom: 16,
+    minHeight: 400, // Minimum height for mobile containers
+  },
+  containerTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 8,
-    color: '#333',
-  },
-  graphPlaceholder: {
-    height: 150,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#D0E1E9',
-    borderRadius: 8,
-  },
-  footer: {
-    marginTop: 16,
-    alignItems: 'center',
-    backgroundColor: '#DFECF2',
-  },
-  footerLink: {
-    color: '#000',
-    fontSize: 14,
-    marginTop: 8,
-  },
-  footerText: {
-    fontSize: 14,
-    color: '#666',
-    marginTop: 8,
-  },
-  icon: {
-    marginRight: 8,
+    fontWeight: "bold",
+    color: "#333",
   },
 });
