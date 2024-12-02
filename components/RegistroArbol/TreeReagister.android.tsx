@@ -15,7 +15,7 @@ import { TreeCordenandas } from '../TreeCordenandas';
 export default function TreeRegister() {
     const [nombre, setTreeName] = useState('');
     const [nombre_cientifico, setScientific] = useState('');
-    const [Comentarios, setComentarios] = useState('');
+    const [comentarios, setComentarios] = useState('');
     const [tipo_sitio, setSite] = useState('');
     const [dendometria, setDendometry] = useState('');
     const [estado_salud, setHealth] = useState('');
@@ -42,13 +42,6 @@ export default function TreeRegister() {
     };
 
 
-
-    //const [region, setRegion] = useState({
-    //    latitude: 37.78825,
-    //    longitude: -122.4324,
-    //    latitudeDelta: 0.0922,
-    //    longitudeDelta: 0.0421,
-    //});
 
     const qrRef = useRef<any>(null);
 
@@ -122,12 +115,12 @@ export default function TreeRegister() {
                 .insert({
                     nombre,
                     nombre_cientifico,
-                    //descripcion,
                     tipo_sitio,
                     dendometria,
                     estado_salud,
                     conflictos,
                     riesgo,
+                    comentarios,
                     latitud: location.latitude,
                     longitud: location.longitude
                 })
@@ -173,7 +166,7 @@ export default function TreeRegister() {
                 <Text style={styles.subHeader}><TabBarIcon name='caret-forward-sharp' />Preguntas Referentes al arbol</Text>
                 <ThemedView style={styles.stepContainermap}>
                     
-                    {/*Para el nombre del arbol*/}
+                   
                     <Text>Nombre del arbol:</Text>
                     <TextInput
                         style={styles.input}
@@ -181,7 +174,7 @@ export default function TreeRegister() {
                         value={nombre}
                         onChangeText={setTreeName}
                     />
-                    {/*Para el nombre cientifico*/}
+                    
                     <Text>Nombre Científico:</Text>
                     <TextInput
                         style={styles.input}
@@ -189,7 +182,7 @@ export default function TreeRegister() {
                         value={nombre_cientifico}
                         onChangeText={setScientific}
                     />
-                    {/*Para la descripcion*/}
+                   
                     <Text>Tipo De Sitio:</Text>
                     <TextInput
                         style={styles.input}
@@ -197,7 +190,7 @@ export default function TreeRegister() {
                         value={tipo_sitio}
                         onChangeText={setSite}
                     />
-                    {/*Para la dendrometria*/}
+                    
                     <Text>Dendrometría:</Text>
                     <TextInput
                         style={styles.input}
@@ -205,7 +198,7 @@ export default function TreeRegister() {
                         value={dendometria}
                         onChangeText={setDendometry}
                     />
-                    {/*Para el estado de salud*/}
+                    
                     <Text>Estado De Salud:</Text>
                     <TextInput
                         style={styles.input}
@@ -213,7 +206,7 @@ export default function TreeRegister() {
                         value={estado_salud}
                         onChangeText={setHealth}
                     />
-                    {/*Para conflictos*/}
+                    
                     <Text>Conflictos:</Text>
                     <TextInput
                         style={styles.input}
@@ -221,7 +214,7 @@ export default function TreeRegister() {
                         value={conflictos}
                         onChangeText={setIssues}
                     />
-                    {/*Para riesgo*/}
+                    
                     <Text>Riesgo:</Text>
                     <TextInput
                         style={styles.input}
@@ -229,16 +222,16 @@ export default function TreeRegister() {
                         value={riesgo}
                         onChangeText={setRisk}
                     />
-                    {/*Para comentarios*/}
+                    
                     <Text>Comentarios:</Text>
                     <TextInput
                         style={styles.input}
                         placeholder="Comentarios"
-                        value={Comentarios}
+                        value={comentarios}
                         onChangeText={setComentarios}
                     />
                 </ThemedView>
-                {/*Para la captura de la imagen*/}
+                {/* Para la captura de la imagen */}
 
                 <Text style={styles.subHeader}><TabBarIcon name='caret-forward-sharp' />Captura de imagen del arbol</Text>
                 <ThemedView style={styles.stepContainermap}>
@@ -254,7 +247,7 @@ export default function TreeRegister() {
                         onClose={() => setCameraVisible(false)}
                     />
                 </ThemedView>
-                {/*Para la ubicacion del arbol*/}
+                {/* Para la ubicacion del arbol */}
 
                 <Text style={styles.subHeader}><TabBarIcon name='caret-forward-sharp' />Ubicacion del arbol</Text>
                 <ThemedView style={styles.stepContainermap}>
@@ -277,7 +270,7 @@ export default function TreeRegister() {
                             latitudeDelta: 0.01,
                             longitudeDelta: 0.01,
                         }}
-                        draggable={false} // Deshabilitar arrastrar el mapa
+                        // draggable={false} // Deshabilitar arrastrar el mapa
                         showsMyLocationButton={true} // Mostrar el botón para localizar la ubicación
                         showsUserLocation={false} // Deshabilitar mostrar la ubicación del usuario
 

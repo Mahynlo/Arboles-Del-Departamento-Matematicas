@@ -2,7 +2,7 @@ import { Image, StyleSheet, Platform, TouchableOpacity, Pressable } from 'react-
 import { Ionicons } from '@expo/vector-icons';
 import { ComponentProps } from 'react';
 import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
+import { ScrollView } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { Link } from 'expo-router';
@@ -12,132 +12,84 @@ import Card from "../../components/Ui/Card";
 import { PricingCard, lightColors } from '@rneui/themed';
 
 export default function HomeScreen() {
-  
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
+    // <TreeList />
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
+      {/* Header Section */}
+      <ThemedView style={styles.header}>
+        <ThemedText type="title" style={styles.title}>
+          Árboles del Departamento de Matemáticas
+        </ThemedText>
+        <ThemedText type="subtitle" style={styles.subtitle}>
+          Explora, registra, y analiza la información de los árboles registrados.
+        </ThemedText>
+        {/* <Image
           source={require('@/assets/images/Arbol_de_prueba.jpg')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Árboles Del Departamento De Matemáticas</ThemedText>
-        <HelloWave />
+          style={styles.headerImage}
+        /> */}
       </ThemedView>
 
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Acerca del proyecto</ThemedText>
-        <ThemedText>
-          {Platform.OS === 'web' ? (
-            <>
-              Puedes ver la información de los árboles registrados en el Departamento de Matemáticas.
-            </>
-          ) : (
-            <>
-              Registra un árbol o ve la información de un árbol ya registrado
+      {/* Bento Box Section */}
+      <ThemedView style={styles.bentoBoxContainer}>
+        <ButtonLink
+          href="/about"
+          title="About"
+          iconName="information-circle"
+          color="#FF6347"
+        />
+        <ButtonLink
+          href="/mapa"
+          title="Mapa"
+          iconName="map"
+          color="#4682B4"
+        />
+        <ButtonLink
+          href="/generadorQr"
+          title="Generar QR"
+          iconName="qr-code"
+          color="#FFD700"
+        />
+        <ButtonLink
+          href="/TreeRegistration"
+          title="Registro de Árbol"
+          iconName="leaf"
+          color="#32CD32"
+        />
+        <ButtonLink
+          href="/camaraFoto"
+          title="Tomar Foto"
+          iconName="camera"
+          color="#8A2BE2"
+        />
+      </ThemedView>
 
-            </>
-          )}
+      {/* Placeholder for Graphs */}
+      <ThemedView style={styles.graphSection}>
+        <ThemedText type="subtitle" style={styles.graphTitle}>
+          Análisis y Estadísticas
+        </ThemedText>
+        {/* <View style={styles.graphPlaceholder}>
+          <ThemedText>Gráficos vendrán aquí...</ThemedText>
+        </View> */}
+      </ThemedView>
+
+      {/* Footer */}
+      <ThemedView style={styles.footer}>
+        <Link href="https://github.com/Mahynlo/Arboles-Del-Departamento-Matematicas/tree/main">
+          <TabBarIcon name="logo-github" color="#fff" />
+        </Link>
+        <Link href="/" style={styles.footerLink}>
+          Política de Privacidad
+        </Link>
+        <ThemedText style={styles.footerText}>
+          © 2023 Departamento de Matemáticas
         </ThemedText>
       </ThemedView>
-
-      {Platform.OS === 'web' ? (
-        <>
-          {/* Botones en grid */}
-          <ThemedView style={styles.buttonGridContainer}>
-            <ButtonLink href="/about" title="About" iconName="information-circle" color="#FF6347" />
-            <ButtonLink href="/mapa" title="Mapa" iconName="map" color="#4682B4" />
-            <ButtonLink href="/generadorQr" title="Generar de QR" iconName="qr-code" color="#FFD700" />
-            <ButtonLink href='/camaraFoto' title="Tomar foto" iconName="camera" color="#FF6347" />
-          </ThemedView>
-        </>
-      ) : (
-
-        <>
-          {/* Botones en grid */}
-          <ThemedView style={styles.buttonGridContainer}>
-            <ButtonLink href="/about" title="About" iconName="information-circle" color="#FF6347" />
-            <ButtonLink href="/scanerCamara" title="Camera screen" iconName="camera" color="#8A2BE2" />
-            <ButtonLink href="/mapa" title="Mapa" iconName="map" color="#4682B4" />
-            <ButtonLink href="/generadorQr" title="Generar de QR" iconName="qr-code" color="#FFD700" />
-            <ButtonLink href="/TreeRegistration" title="Registro de árbol" iconName="leaf" color="#32CD32" />
-            <ButtonLink href='/camaraFoto' title="Tomar foto" iconName="camera" color="#FF6347" />
-
-          </ThemedView>
-        </>
-      )}
-
-
-
-
-      {Platform.OS === 'web' ? (
-        <ThemedView style={styles.stepContainer}>
-          <ThemedText type="subtitle">Acerca del proyecto</ThemedText>
-          <ThemedText>
-            <>
-              Por aqui segura la pagina en la version web
-            </>
-          </ThemedText>
-          <ThemedView style={styles.webSectionContainer}>
-            <ThemedText type="subtitle">Versión Web</ThemedText>
-            <ThemedText>Accede a la información completa de los árboles en la versión web.</ThemedText>
-          </ThemedView>
-
-          <ThemedView style={styles.cardContainer}>
-            <Card
-              title="Informacion de Árboles"
-              description="Estadisticas de Los Árboles registrados."
-              imageUrl="./assets/images/Arbol_de_prueba.jpg"
-              onPress={() => alert('Montañas seleccionadas')}
-            />
-
-            <Card
-              title="Mapas"
-              description="Ve la distribucion de los árboles en el mapa."
-              imageUrl="./assets/images/Imagen_Mapa.jpg"
-              onPress={() => alert('Mapa seleccionado')}
-            />
-            <Card
-              title="Informacion de Árboles"
-              description="Estadisticas de Los Árboles registrados."
-              imageUrl="./assets/images/Arbol_de_prueba.jpg"
-              onPress={() => alert('Montañas seleccionadas')}
-            />
-
-            <Card
-              title="Mapas"
-              description="Ve la distribucion de los árboles en el mapa."
-              imageUrl="./assets/images/Imagen_Mapa.jpg"
-              onPress={() => alert('Mapa seleccionado')}
-            />
-
-          </ThemedView>
-
-
-          <ThemedView style={styles.footer}>
-            <ThemedView style={styles.footerIcons}>
-              <Link href="/" style={styles.footerLink}><TabBarIcon name="mail-outline" color="#fff" style={styles.icon} /></Link>
-              {/* GitHub en otra pestaña */}
-              <Link href="https://github.com/Mahynlo/Arboles-Del-Departamento-Matematicas/tree/main" style={styles.footerLink}><TabBarIcon name="logo-github" color="#fff" style={styles.icon} /></Link>
-            </ThemedView>
-            <Link href="/" style={styles.footerLink}>Política de Privacidad</Link>
-            <ThemedText type="subtitle" style={styles.footerText}>© 2023 Departamento de Matemáticas</ThemedText>
-          </ThemedView>
-        </ThemedView>
-
-      ) : (
-        <>
-
-
-        </>
-      )}
-    </ParallaxScrollView>
+    </ScrollView>
   );
 }
 
-interface ButtonLinkProps {//Propiedades de los botones
+interface ButtonLinkProps {
   href: string;
   title: string;
   iconName?: ComponentProps<typeof Ionicons>['name'];
@@ -145,96 +97,116 @@ interface ButtonLinkProps {//Propiedades de los botones
 }
 
 function ButtonLink({ href, title, iconName, color }: ButtonLinkProps) {
-  const Wrapper = Platform.OS === 'web' ? Pressable : TouchableOpacity;
-
   return (
-    <Wrapper style={[styles.button, { backgroundColor: color }]}>
+    <ThemedView style={[styles.buttonCard, { backgroundColor: color }]}>
       <Link href={href as any} style={styles.linkText}>
-        {/* Agrega el ícono */}
         {iconName && <TabBarIcon name={iconName} color="#fff" style={styles.icon} />}
-        {/*Titulo del icono*/}
         {title}
       </Link>
-    </Wrapper>
+    </ThemedView>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-    marginBottom: 8,
+  scrollContainer: {
+    flexGrow: 1,
+    padding: 16,
+    backgroundColor: '#DFECF2',
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  header: {
+    alignItems: 'flex-start',
+    marginBottom: 16,
+    padding: 16,
+    backgroundColor: '#DFECF2',
+    borderRadius: 12,
   },
-  reactLogo: {
-    height: 280,
+  title: {
+    fontSize: 48,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: '#333',
+  },
+  subtitle: {
+    fontSize: 16,
+    color: '#666',
+    textAlign: 'center',
+    marginVertical: 8,
+  },
+  headerImage: {
     width: '100%',
+    height: 200,
+    borderRadius: 12,
+    marginTop: 8,
     resizeMode: 'cover',
   },
-  buttonGridContainer: {
-    flexDirection: 'row', // Alinea los botones en una fila
-    flexWrap: 'wrap', // Permite que los botones ocupen varias líneas
-    //justifyContent: 'space-around', // Centra las filas en el contenedor
-    justifyContent: Platform.OS === 'web' ? 'center' : 'flex-start', // Centra los botones en web y los separa en móvil
-    marginHorizontal: 3,
-    gap: 12, // Espacio entre los botones
-  },
-  button: {
+  bentoBoxContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 30,
-    paddingHorizontal: 30,
-    borderRadius: 10,
-    backgroundColor: '#1e90ff',
+    flexWrap: 'wrap',
+    alignContent: 'center', // Helps with tighter spacing
     justifyContent: 'center',
-    width: Platform.OS === 'web' ? '30%' : '48%', // Ajusta el ancho de los botones
+    gap: 4, // Very small gap
+    marginBottom: 24,
+    backgroundColor: '#DFECF2',
+    width: '100%',
+    paddingHorizontal: 0,
   },
-  icon: {
-    marginBottom: Platform.OS === 'web' ? 0 : 8, // Espacio entre el icono y el texto solo en móvil
+  buttonCard: {
+    width: '20%', // 4 columns
+    paddingVertical: 10,
+    // paddingHorizontal: 200,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 10,
+    marginHorizontal: 20,
+    marginVertical: 10, // Consistent small margin
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowOffset: { width: 0, height: 2 },
   },
   linkText: {
     color: '#fff',
     fontSize: 16,
-    marginLeft: 8,
-    flexDirection: 'row',
-    textDecorationLine: Platform.OS === 'web' ? 'none' : 'none',
+    fontWeight: 'bold',
+  },
+  graphSection: {
+    padding: 16,
+    backgroundColor: '#D0E1E9',
+    borderRadius: 12,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowOffset: { width: 0, height: 2 },
+  },
+  graphTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 8,
+    color: '#333',
+  },
+  graphPlaceholder: {
+    height: 150,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#D0E1E9',
+    borderRadius: 8,
   },
   footer: {
-    marginTop: 20,
-    paddingVertical: 16,
-    borderTopWidth: 1,
-    borderColor: '#ccc',
+    marginTop: 16,
     alignItems: 'center',
-  },
-  footerText: {
-    fontSize: 14,
-    color: '#777',
+    backgroundColor: '#DFECF2',
   },
   footerLink: {
-    color: '#1e90ff',
+    color: '#000',
     fontSize: 14,
     marginTop: 8,
   },
-  footerIcons: {
-    flexDirection: 'row', // Alinea los botones en una fila
-    flexWrap: 'wrap',
-    gap: 10,
+  footerText: {
+    fontSize: 14,
+    color: '#666',
+    marginTop: 8,
   },
-  // Web-specific Section
-  webSectionContainer: {
-    paddingHorizontal: 16,
-    paddingBottom: 16,
+  icon: {
+    marginRight: 8,
   },
-  cardContainer: {
-    flexDirection: 'row', // Alinea los botones en una fila
-    flexWrap: 'wrap', // Permite que los botones ocupen varias líneas
-    //justifyContent: 'space-around', // Centra las filas en el contenedor
-    justifyContent: Platform.OS === 'web' ? 'center' : 'flex-start', // Centra los botones en web y los separa en móvil
-    marginHorizontal: 2,
-    gap: 30, // Espacio entre los botones
-  }
 });
