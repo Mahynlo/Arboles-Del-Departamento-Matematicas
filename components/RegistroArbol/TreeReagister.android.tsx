@@ -7,7 +7,7 @@ import * as FileSystem from 'expo-file-system';
 import * as MediaLibrary from 'expo-media-library';
 import { supabase } from '../../lib/supabase';
 import { ThemedView } from '../ThemedView';
-import { ScannerCamera } from "@/components/fotos/CapturarImagen";
+import { ScannerCamera, savePicture } from "../../components/fotos/CapturarImagen";
 import { TabBarIcon } from '../navigation/TabBarIcon';
 import { TreeCordenandas } from '../TreeCordenandas';
 
@@ -133,7 +133,50 @@ export default function TreeRegister() {
                 })
                 .select('id_arbol') // Recupera el ID generado
                 .single(); // Asegura que devuelve un solo registro;
+        try{
+            const { data, error } = await supabase
+                .from('arbol')
+                .insert({
+                    nombre,
+                    nombre_cientifico,
+                    //descripcion,
+                    tipo_sitio,
+                    dendometria,
+                    estado_salud,
+                    conflictos,
+                    riesgo,
+                    latitud: location.latitude,
+                    longitud: location.longitude
+                })
+                .select('id_arbol') // Recupera el ID generado
+                .single(); // Asegura que devuelve un solo registro;
 
+                if (error) {
+                    Alert.alert('Error', 'No se pudo registrar el árbol en la base de datos.');
+                    console.log(error);
+                    return null; // Devuelve null si hay un error
+                }
+        
+                Alert.alert('Éxito', 'Árbol registrado en la base de datos.');
+                return data.id_arbol; // Retorna el ID del árbol
+        } catch (error) {
+            console.error('Error general:', error);
+            return null;
+        }
+    };
+
+    const saveTreeAndPicture = async () => {
+        const treeId = await saveTreeToSupabase(); // Registrar el árbol y obtener el ID
+        console.log(treeId)
+        if (!treeId) {
+          Alert.alert('Error', 'No se pudo registrar el árbol.');
+          return;
+        }
+      
+        if (capturedImage) {
+          // Guardar la imagen utilizando el ID del árbol
+          await savePicture(capturedImage, treeId);
+          console.log(treeId);
                 if (error) {
                     Alert.alert('Error', 'No se pudo registrar el árbol en la base de datos.');
                     console.log(error);
@@ -162,7 +205,11 @@ export default function TreeRegister() {
           console.log(treeId);
         } else {
           Alert.alert('Error', 'No se ha capturado una imagen.');
+          Alert.alert('Error', 'No se ha capturado una imagen.');
         }
+      };
+      
+
       };
       
 
@@ -318,6 +365,7 @@ export default function TreeRegister() {
         </ScrollView>
     );
 }
+
 
 
 const styles = StyleSheet.create({
