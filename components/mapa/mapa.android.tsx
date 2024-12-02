@@ -165,7 +165,7 @@
 //           </Link>
 //         </TouchableOpacity>
 //       </View>
-        
+
 
 //       {/* BottomSheet para información */}
 //       <BottomSheet
@@ -275,7 +275,7 @@
 
 import React, { useEffect, useState } from 'react';
 import * as Location from 'expo-location';
-import { Text, View, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity, Image, Button } from 'react-native';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { Link } from 'expo-router';
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
@@ -305,6 +305,7 @@ export default function MapaScreen() {
     const [selectedTree, setSelectedTree] = useState<Tree | null>(null);
     const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
     const mapRef = React.useRef<MapView>(null);
+    const [showInfo, setShowInfo] = useState(false); // Estado para mostrar el componente
 
     const Initial_Region = {
         latitude: origin.latitude,
@@ -374,6 +375,11 @@ export default function MapaScreen() {
         setSelectedTree(null);
     };
 
+    // Función para manejar el clic del botón
+    const handlePressInfo = () => {
+        setShowInfo(true); // Cambiar el estado a true para mostrar el componente
+    };
+
     const handleLocatePress = async () => {
         const { status } = await Location.requestForegroundPermissionsAsync();
         if (status !== 'granted') {
@@ -438,6 +444,11 @@ export default function MapaScreen() {
                         </Text>
                     </Link>
                 </TouchableOpacity>
+                <TouchableOpacity style={styles.qrButton}>
+                    <Link href={"/scanerCamara"}>
+                    <TabBarIcon name="qr-code-outline" color="#fff" />
+                    </Link>
+                </TouchableOpacity>
             </View>
 
             {/* BottomSheet for tree information */}
@@ -449,18 +460,18 @@ export default function MapaScreen() {
                 {selectedTree && (
                     <View style={styles.infoContainer}>
                         <Text style={styles.infoText}>{selectedTree.nombre}</Text>
-                        <Text style={styles.infoDetail}>Scientific Name: {selectedTree.nombre_cientifico}</Text>
-                        <Text style={styles.infoDetail}>Site Type: {selectedTree.tipo_sitio}</Text>
-                        <Text style={styles.infoDetail}>Dendometry: {selectedTree.dendometria}</Text>
-                        <Text style={styles.infoDetail}>Health Status: {selectedTree.estado_salud}</Text>
-                        <Text style={styles.infoDetail}>Conflicts: {selectedTree.conflictos}</Text>
+                        <Text style={styles.infoDetail}>Nombre cintifico: {selectedTree.nombre_cientifico}</Text>
+                        <Text style={styles.infoDetail}>Tipo de sitio: {selectedTree.tipo_sitio}</Text>
+                        <Text style={styles.infoDetail}>Dendometria: {selectedTree.dendometria}</Text>
+                        <Text style={styles.infoDetail}>Estado: {selectedTree.estado_salud}</Text>
+                        <Text style={styles.infoDetail}>Conflictos: {selectedTree.conflictos}</Text>
                         <Text style={styles.infoDetail}>Risk: {selectedTree.riesgo}</Text>
-                        <Text style={styles.infoDetail}>Comments: {selectedTree.comentarios}</Text>
-                        <Text style={styles.infoDetail}>Latitude: {selectedTree.latitud}</Text>
-                        <Text style={styles.infoDetail}>Longitude: {selectedTree.longitud}</Text>
+                        <Text style={styles.infoDetail}>Comentarios: {selectedTree.comentarios}</Text>
+                        <Text style={styles.infoDetail}>Latitud: {selectedTree.latitud}</Text>
+                        <Text style={styles.infoDetail}>Longitud: {selectedTree.longitud}</Text>
 
                         <TouchableOpacity style={styles.animatedButton}>
-                            <Link href="/InfoTree">
+                            <Link href={{ pathname: "/InfoTree", params: { tree: JSON.stringify(selectedTree) } }}>
                                 <Text style={styles.buttonText}>More Info</Text>
                             </Link>
                         </TouchableOpacity>
@@ -481,6 +492,7 @@ const styles = StyleSheet.create({
     buttonContainer: { position: 'absolute', bottom: 100, right: 20 },
     locateButton: { backgroundColor: '#42a5f5', borderRadius: 50, padding: 10, marginBottom: 10 },
     alertButton: { backgroundColor: '#1abb3a', borderRadius: 50, padding: 10 },
+    qrButton: { backgroundColor: '#1e90ff', borderRadius: 50, padding: 10,marginTop: 10 },
     buttonText: { fontSize: 18, color: '#fff' },
     markerImage: { width: 30, height: 30 },
     infoContainer: { backgroundColor: '#fff', padding: 12, alignItems: 'center', margin: 5, borderRadius: 10, width: '98%' },

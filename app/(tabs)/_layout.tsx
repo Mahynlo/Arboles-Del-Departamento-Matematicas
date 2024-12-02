@@ -5,36 +5,52 @@ import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Platform, TouchableOpacity, Text } from 'react-native';
-import { Link,useRouter } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import HeaderLinks from '@/components/navigation/HeaderLinks'; // Importar componente de enlaces en el encabezado
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
-  const title= "ARDEMA TREE PROJECT";
- 
+  const title = "ARDEMA TREE PROJECT";
+
   // Condición para no mostrar Tabs en la web
   if (Platform.OS === 'web') {
     return (
       //se muestra el componente index
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="index" options={{
-          title: title, // Título de la barra de navegación
-          headerLeft: () => null, // No mostrar botón de regreso
-          headerTitleStyle: {
-            fontSize: 20,
-            fontWeight: 'bold',
-            color: '#000',
-            fontFamily: 'YourCustomFont', // Asegúrate de que la fuente esté cargada
-          },
-          headerStyle: { backgroundColor: '#fff' },
-          headerRight: () => (  // Se muestra en la barra de navegación
-            <HeaderLinks /> // Componente de enlaces
-          ),
-        }
-        } />
-        <Stack.Screen name="mapa" options={
-          {
+        <Stack>
+          <Stack.Screen name="index" options={{
+            title: title, // Título de la barra de navegación
+            headerLeft: () => null, // No mostrar botón de regreso
+            headerTitleStyle: {
+              fontSize: 20,
+              fontWeight: 'bold',
+              color: '#000',
+              fontFamily: 'YourCustomFont', // Asegúrate de que la fuente esté cargada
+            },
+            headerStyle: { backgroundColor: '#fff' },
+            headerRight: () => (  // Se muestra en la barra de navegación
+              <HeaderLinks /> // Componente de enlaces
+            ),
+          }
+          } />
+          <Stack.Screen name="mapa" options={
+            {
+              title: title,
+              headerLeft: () => null, // No mostrar botón de regreso
+              headerTitleStyle: {// Estilo del título
+                fontSize: 20,
+                fontWeight: 'bold',
+                color: '#000',
+                fontFamily: 'YourCustomFont', // Asegúrate de que la fuente esté cargada
+              },
+              headerStyle: { backgroundColor: 'fff' },
+              headerRight: () => (
+                <HeaderLinks />
+              ),
+
+            }
+          } />
+          <Stack.Screen name="explore" options={{
             title: title,
             headerLeft: () => null, // No mostrar botón de regreso
             headerTitleStyle: {// Estilo del título
@@ -43,31 +59,15 @@ export default function TabLayout() {
               color: '#000',
               fontFamily: 'YourCustomFont', // Asegúrate de que la fuente esté cargada
             },
-            headerStyle: { backgroundColor: '#3d80d4' },
+            headerStyle: { backgroundColor: '#fff' },
             headerRight: () => (
               <HeaderLinks />
             ),
-            
           }
-        } />
-        <Stack.Screen name="explore" options={{
-          title: title,
-          headerLeft: () => null, // No mostrar botón de regreso
-          headerTitleStyle: {// Estilo del título
-            fontSize: 20,
-            fontWeight: 'bold',
-            color: '#fff',
-            fontFamily: 'YourCustomFont', // Asegúrate de que la fuente esté cargada
-          },
-          headerStyle: { backgroundColor: '#3d80d4' },
-          headerRight: () => (
-            <HeaderLinks />
-          ),
-        }
-        } />
+          } />
 
-      </Stack>
-    </ThemeProvider>
+        </Stack>
+      </ThemeProvider>
     )
   }
   // vista para movil tabs 

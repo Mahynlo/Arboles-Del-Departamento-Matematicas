@@ -65,9 +65,9 @@ export const QRgenerador = ({ isVisible, qrvalue, onQRImpresion, onClose }: QRPr
                         size={256}
                         color="black"
                         backgroundColor="white"
-                        logo={{ uri: '../../assets/images/TreeIcon.png' }}
+                        logo={{ uri: 'https://semana.mat.uson.mx/~cursotacc/a219211930/prueba/TreeIcon.png'}}
                         logoSize={30}
-                        logoBackgroundColor='transparent'
+                        logoBackgroundColor="transparent"
                         getRef={(c) => (qrRef.current = c)}
                     />
                 )}

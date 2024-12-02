@@ -47,9 +47,10 @@ export default function RootLayout() {
             headerTitleStyle: {
               fontSize: 20,
               fontWeight: 'bold',
-              color: '#fff',
+              color: '#000',
+              fontFamily: 'YourCustomFont', // Asegúrate de que la fuente esté cargada
             },
-            headerStyle: { backgroundColor: '#3d80d4' },
+            headerStyle: { backgroundColor: '#fff' },
             headerRight: () => (
               Platform.OS === 'web' ? <HeaderLinks /> : <HeaderLinksMovil /> // Solo se muestra en web
             ),
@@ -65,6 +66,12 @@ export default function RootLayout() {
         }} />
         <Stack.Screen name='settings' options={{
           title: 'Configuración',
+        }} />
+        <Stack.Screen name='InfoTree' options={{
+          title: 'Información del Árbol',
+        }} />
+        <Stack.Screen name='scanerCamara' options={{
+          title: 'Escaner de QR',
         }} />
         <Stack.Screen name="+not-found" />
       </Stack>

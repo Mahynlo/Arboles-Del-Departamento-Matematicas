@@ -1,6 +1,7 @@
 import { CameraView, useCameraPermissions, Camera } from 'expo-camera';
 import { useState, useEffect } from 'react';
-import { Button, StyleSheet, Text, View, Alert, Platform } from 'react-native';
+import { Button, StyleSheet, Text, View, Platform, Alert } from 'react-native';
+import { useRouter } from 'expo-router';
 
 type Prop = {
   type: string;
@@ -8,6 +9,7 @@ type Prop = {
 };
 
 export default function ScanerCameraScreen() {
+  const router = useRouter(); // Instancia para la navegación
   const [permission, requestPermission] = useCameraPermissions();
   const [scanned, setScanned] = useState(false);
 
@@ -24,17 +26,25 @@ export default function ScanerCameraScreen() {
   // Maneja el escaneo del código QR
   const handleBarCodeScanned = ({ type, data }: Prop) => {
     setScanned(true);
-    Alert.alert(
-      `Código ${type} Scaneado`,
-      `Datos: ${data}`,
-      [
-        {
-          text: 'OK',
-          onPress: () => setScanned(false),
-        },
-      ],
-      { cancelable: false }
-    );
+    try {
+      if (!data.startsWith('ARDEMA=')) {
+        throw new Error('Formato no válido. El código debe comenzar con "ARDEMA=".');
+      }
+
+      // Extrae y decodifica el JSON del código QR
+      const jsonString = decodeURIComponent(data.replace('ARDEMA=', ''));
+      const treeData = JSON.parse(jsonString);
+
+      // Navega al componente de destino y pasa los datos
+      router.push({
+        pathname: '/InfoTree', // Ruta al componente destino
+        params: { tree: JSON.stringify(treeData) }, // Pasa el JSON como parámetro
+      });
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Datos no válidos.';
+      Alert.alert('Error al procesar el QR', errorMessage);
+      setScanned(false);
+    }
   };
 
   if (Platform.OS === 'web') {
@@ -119,3 +129,5 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.6)',
   },
 });
+
+
