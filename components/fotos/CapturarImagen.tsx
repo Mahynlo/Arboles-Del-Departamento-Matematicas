@@ -3,12 +3,82 @@ import * as MediaLibrary from 'expo-media-library';
 import { useState, useRef, useEffect } from 'react';
 import { View, StyleSheet, TouchableOpacity, Text, Image, Alert, Modal, Platform } from 'react-native';
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
+import { supabase } from "../../lib/supabase";
+import { Buffer } from 'buffer';
 
 interface ScannerCameraProps {
   isVisible: boolean;
   onCapture: (uri: string) => void;
   onClose: () => void;
 }
+
+export const savePicture = async (uri:string, treeId:number) => {
+  if (!uri) {
+    Alert.alert('Error', 'No se proporcionó una URI válida.');
+    return;
+  }
+
+  try {
+    // Solicitar permisos
+    const { status } = await MediaLibrary.requestPermissionsAsync();
+    if (status !== 'granted') {
+      Alert.alert('Error', 'No se tienen permisos para guardar en la galería.');
+      return;
+    }
+
+    // Guardar en la galería
+    const asset = await MediaLibrary.createAssetAsync(uri);
+    const album = await MediaLibrary.getAlbumAsync('CameraExpo');
+    if (!album) {
+      await MediaLibrary.createAlbumAsync('CameraExpo', asset, false);
+    } else {
+      await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
+    }
+
+    Alert.alert('Éxito', 'Imagen guardada en la galería.');
+
+    // Subir a Supabase Storage
+    try {
+      const response = await fetch(uri);
+      if (!response.ok) {
+        throw new Error('No se pudo obtener la imagen desde la URI.');
+      }
+
+      const blob = await response.blob();
+
+      // Usar FileReader para convertir el blob a ArrayBuffer
+      const arrayBuffer = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result);
+        reader.onerror = (error) => reject(error);
+        reader.readAsArrayBuffer(blob);
+      });
+
+      // Crear una carpeta con el ID del árbol como nombre
+      const fileName = `public/${treeId}/${Date.now()}.jpg`;
+
+      const { error } = await supabase.storage
+        .from('arboles_del_departamento')
+        .upload(fileName, arrayBuffer, {
+          contentType: 'image/jpeg',
+          upsert: false,
+        });
+
+      if (error) {
+        console.error('Error uploading image: ', error);
+        Alert.alert('Error', 'No se pudo subir la imagen a Supabase.');
+      } else {
+        Alert.alert('Éxito', 'Imagen subida a Supabase correctamente.');
+      }
+    } catch (uploadError) {
+      console.error('Error al subir la imagen a Supabase:', uploadError);
+      Alert.alert('Error', 'Ocurrió un error al subir la imagen a Supabase.');
+    }
+  } catch (error) {
+    console.error('Error general:', error);
+    Alert.alert('Error', 'No se pudo guardar la imagen.');
+  }
+};
 
 export const ScannerCamera = ({ isVisible, onCapture, onClose }: ScannerCameraProps) => {
   const [permission, requestPermission] = useCameraPermissions();
@@ -25,36 +95,14 @@ export const ScannerCamera = ({ isVisible, onCapture, onClose }: ScannerCameraPr
     if (cameraRef.current) {
       const photo = await cameraRef.current.takePictureAsync();
       setCapturedPhoto(photo.uri);
+      return photo.uri;
+      //console.log("photo", photo);
+    }else{
+      return null;
     }
   };
-
-  const savePicture = async (uri: string) => {
-    try {
-      const { status } = await MediaLibrary.requestPermissionsAsync();
-      if (status !== 'granted') {
-        Alert.alert('Error', 'No se tienen permisos para guardar en la galería.');
-        return;
-      }
-
-      const asset = await MediaLibrary.createAssetAsync(uri);
-      const album = await MediaLibrary.getAlbumAsync('CameraExpo');
-      if (!album) {
-        await MediaLibrary.createAlbumAsync('CameraExpo', asset, false);
-      } else {
-        await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
-      }
-
-      Alert.alert('Éxito', 'Imagen guardada en la galería.');
-    } catch (error) {
-      console.error(error);
-      Alert.alert('Error', 'No se pudo guardar la imagen.');
-    }
-  };
-
-  if (Platform.OS === 'web' || !permission?.granted) {
-    return null;
-  }
-
+  
+  
   return (
     <Modal visible={isVisible} animationType="slide">
       <View style={styles.container}>
@@ -65,7 +113,7 @@ export const ScannerCamera = ({ isVisible, onCapture, onClose }: ScannerCameraPr
               <TouchableOpacity
                 style={styles.roundButton}
                 onPress={() => {
-                  savePicture(capturedPhoto);
+                  //savePicture(capturedPhoto);
                   onCapture(capturedPhoto); // Devuelve la imagen capturada
                   onClose();
                 }}
