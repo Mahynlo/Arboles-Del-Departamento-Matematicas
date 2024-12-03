@@ -25,6 +25,7 @@ import { TabBarIcon } from "../navigation/TabBarIcon";
 import { TreeCordenandas } from "../TreeCordenandas";
 import { RadioButton, Checkbox } from "react-native-paper";
 import Slider from "@react-native-community/slider";
+import RNPickerSelect from "react-native-picker-select";
 // import CheckBox from "@react-native-community/checkbox";
 
 export default function TreeRegister() {
@@ -270,16 +271,15 @@ export default function TreeRegister() {
           />
 
           <Text>Tipo De Sitio:</Text>
-          {tipoSitioOptions.map((option) => (
-            <View key={option} style={styles.radioContainer}>
-              <RadioButton
-                value={option}
-                status={tipo_sitio === option ? "checked" : "unchecked"}
-                onPress={() => setSite(option)}
-              />
-              <Text>{option}</Text>
-            </View>
-          ))}
+          <RNPickerSelect
+            onValueChange={(value) => setSite(value)}
+            items={tipoSitioOptions.map((option) => ({
+              label: option,
+              value: option,
+            }))}
+            placeholder={{ label: "Selecciona un tipo de sitio", value: null }}
+            value={tipo_sitio}
+          />
 
           <Text>Dendrometría (m):</Text>
           <Slider
@@ -293,17 +293,18 @@ export default function TreeRegister() {
           <Text>{dendometria} m</Text>
 
           <Text>Estado De Salud:</Text>
-          <RadioButton.Group
+          <RNPickerSelect
+            onValueChange={(value) => setHealth(value)}
+            items={estadoSaludOptions.map((option) => ({
+              label: option,
+              value: option,
+            }))}
+            placeholder={{
+              label: "Selecciona un estado de salud",
+              value: null,
+            }}
             value={estado_salud}
-            onValueChange={(newValue) => setHealth(newValue)} // Update the state with the selected option
-          >
-            {estadoSaludOptions.map((option) => (
-              <View key={option} style={styles.radioContainer}>
-                <RadioButton value={option} />
-                <Text>{option}</Text>
-              </View>
-            ))}
-          </RadioButton.Group>
+          />
 
           <Text>Conflictos:</Text>
           {conflictosOptions.map((option) => (
