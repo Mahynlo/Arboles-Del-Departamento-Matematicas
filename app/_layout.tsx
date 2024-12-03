@@ -63,6 +63,7 @@ export default function RootLayout() {
             fontSize: 20,
             fontWeight: 'bold',  
           },
+          headerStyle: { backgroundColor: '#9cb898' },
         }} />
         <Stack.Screen name='settings' options={{
           title: 'Configuración',

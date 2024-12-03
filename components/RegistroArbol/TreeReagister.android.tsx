@@ -56,15 +56,15 @@ export default function TreeRegister() {
   const [mapVisible, setMapVisible] = useState(false);
 
   const tipoSitioOptions: string[] = [
-    "borde carretero",
-    "camellon central",
-    "camellon lateral",
-    "rotonda",
-    "banqueta",
-    "servidumbre",
-    "parque publico",
-    "jardin privado",
-    "terreno de cultivo",
+    "Borde Carretero",
+    "Camellon Central",
+    "Camellon Lateral",
+    "Rotonda",
+    "Banqueta",
+    "Servidumbre",
+    "Parque Publico",
+    "Jardin Privado",
+    "Terreno de Cultivo",
   ];
   const estadoSaludOptions: string[] = [
     "excelente",
@@ -250,11 +250,11 @@ export default function TreeRegister() {
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.container}>
         <Text style={styles.subHeader}>
-          <TabBarIcon name="caret-forward-sharp" />
-          Preguntas Referentes al arbol
+          {/* <TabBarIcon name="caret-forward-sharp" /> */}➤ Preguntas
+          Referentes al árbol
         </Text>
         <ThemedView style={styles.stepContainermap}>
-          <Text>Nombre del arbol:</Text>
+          <Text style={styles.textIndicators}>Nombre del arbol</Text>
           <TextInput
             style={styles.input}
             placeholder="Nombre del Árbol"
@@ -262,7 +262,7 @@ export default function TreeRegister() {
             onChangeText={setTreeName}
           />
 
-          <Text>Nombre Científico:</Text>
+          <Text style={styles.textIndicators}>Nombre Científico</Text>
           <TextInput
             style={styles.input}
             placeholder="Nombre Científico"
@@ -270,18 +270,39 @@ export default function TreeRegister() {
             onChangeText={setScientific}
           />
 
-          <Text>Tipo De Sitio:</Text>
-          <RNPickerSelect
-            onValueChange={(value) => setSite(value)}
-            items={tipoSitioOptions.map((option) => ({
-              label: option,
-              value: option,
-            }))}
-            placeholder={{ label: "Selecciona un tipo de sitio", value: null }}
-            value={tipo_sitio}
-          />
+          <Text style={styles.textIndicators}>Tipo De Sitio</Text>
+          <View style={styles.pickerContainer}>
+            <RNPickerSelect
+              onValueChange={(value) => setSite(value)}
+              items={tipoSitioOptions.map((option) => ({
+                label: option,
+                value: option,
+              }))}
+              placeholder={{
+                label: "Selecciona un tipo de sitio",
+                value: null,
+              }}
+              value={tipo_sitio}
+              style={{
+                placeholder: {
+                  fontSize: 16,
+                  color: "black",
+                },
+                inputIOS: {
+                  fontSize: 16,
+                  //   padding: 10,
+                  color: "black", // Text color
+                },
+                inputAndroid: {
+                  fontSize: 16,
+                  //   padding: 10,
+                  color: "black", // Text color
+                },
+              }}
+            />
+          </View>
 
-          <Text>Dendrometría (m):</Text>
+          <Text style={styles.textIndicators}>Dendrometría (m):</Text>
           <Slider
             style={styles.slider}
             minimumValue={0}
@@ -292,43 +313,64 @@ export default function TreeRegister() {
           />
           <Text>{dendometria} m</Text>
 
-          <Text>Estado De Salud:</Text>
-          <RNPickerSelect
-            onValueChange={(value) => setHealth(value)}
-            items={estadoSaludOptions.map((option) => ({
-              label: option,
-              value: option,
-            }))}
-            placeholder={{
-              label: "Selecciona un estado de salud",
-              value: null,
-            }}
-            value={estado_salud}
-          />
-
-          <Text>Conflictos:</Text>
+          <Text style={styles.textIndicators}>Estado De Salud:</Text>
+          <View style={styles.pickerContainer}>
+            <RNPickerSelect
+              onValueChange={(value) => setHealth(value)}
+              items={estadoSaludOptions.map((option) => ({
+                label: option,
+                value: option,
+              }))}
+              placeholder={{
+                label: "Selecciona un estado de salud",
+                value: null,
+              }}
+              value={estado_salud}
+              style={{
+                placeholder: {
+                  fontSize: 16,
+                  color: "black",
+                },
+                inputIOS: {
+                  fontSize: 16,
+                  padding: 10,
+                  color: "black", // Text color
+                },
+                inputAndroid: {
+                  fontSize: 16,
+                  padding: 10,
+                  color: "black", // Text color
+                },
+              }}
+            />
+          </View>
+          <Text style={styles.textIndicators}>Conflictos:</Text>
           {conflictosOptions.map((option) => (
             <View key={option} style={styles.checkboxContainer}>
               <Checkbox
                 status={conflictos.includes(option) ? "checked" : "unchecked"}
                 onPress={() => toggleCheckbox(option, setConflicts, conflictos)}
+                uncheckedColor="gray" // Color when unchecked
+                color="green" // Color when checked
               />
-              <Text>{option}</Text>
+              <Text style={styles.checkboxLabel}>{option}</Text>
             </View>
           ))}
 
-          <Text>Riesgo:</Text>
+          <Text style={styles.textIndicators}>Riesgo:</Text>
           {riesgoOptions.map((option) => (
             <View key={option} style={styles.checkboxContainer}>
               <Checkbox
                 status={riesgo.includes(option) ? "checked" : "unchecked"}
                 onPress={() => toggleCheckbox(option, setRisk, riesgo)}
+                uncheckedColor="gray" // Color when unchecked
+                color="green" // Color when checked
               />
-              <Text>{option}</Text>
+              <Text style={styles.checkboxLabel}>{option}</Text>
             </View>
           ))}
 
-          <Text>Comentarios:</Text>
+          <Text style={styles.textIndicators}>Comentarios:</Text>
           <TextInput
             style={styles.input}
             placeholder="Comentarios"
@@ -339,10 +381,10 @@ export default function TreeRegister() {
         {/* Para la captura de la imagen */}
 
         <Text style={styles.subHeader}>
-          <TabBarIcon name="caret-forward-sharp" />
-          Captura de imagen del arbol
+          {/* <TabBarIcon name="caret-forward-sharp" /> */}➤ Captura de imagen
+          del árbol
         </Text>
-        <ThemedView style={styles.stepContainermap}>
+        {/* <ThemedView style={styles.stepContainermap}>
           <Button title="Abrir Cámara" onPress={() => setCameraVisible(true)} />
 
           <Text style={styles.mapLabel}>Imagen capturada:</Text>
@@ -357,21 +399,46 @@ export default function TreeRegister() {
             onCapture={(uri) => setCapturedImage(uri)}
             onClose={() => setCameraVisible(false)}
           />
+        </ThemedView> */}
+        <ThemedView style={styles.stepContainermap}>
+          <TouchableOpacity
+            style={styles.cameraButton}
+            onPress={() => setCameraVisible(true)}
+          >
+            <Text style={styles.cameraButtonText}>Abrir Cámara</Text>
+          </TouchableOpacity>
+
+          <Text style={styles.mapLabel}>Imagen capturada:</Text>
+          {capturedImage && (
+            <Image
+              source={{ uri: capturedImage }}
+              style={{ width: 300, height: 300, marginLeft: 30 }}
+            />
+          )}
+          <ScannerCamera
+            isVisible={isCameraVisible}
+            onCapture={(uri) => setCapturedImage(uri)}
+            onClose={() => setCameraVisible(false)}
+          />
         </ThemedView>
+
         {/* Para la ubicacion del arbol */}
 
         <Text style={styles.subHeader}>
-          <TabBarIcon name="caret-forward-sharp" />
-          Ubicacion del arbol
+          {/* <TabBarIcon name="caret-forward-sharp" /> */}➤ Ubicación del árbol
         </Text>
         <ThemedView style={styles.stepContainermap}>
           <Text style={styles.mapLabel}>
             Selecciona la Ubicacion del Arbol:
           </Text>
-          <Button
-            title="Seleccionar Ubicación"
+
+          <TouchableOpacity
+            style={styles.cameraButton}
             onPress={() => setMapVisible(true)}
-          />
+          >
+            <Text style={styles.cameraButtonText}>Seleccionar Ubicación</Text>
+          </TouchableOpacity>
+
           <TreeCordenandas
             isVisible={mapVisible}
             onCordenadas={handleCordenadas}
@@ -389,7 +456,6 @@ export default function TreeRegister() {
               latitudeDelta: 0.01,
               longitudeDelta: 0.01,
             }}
-            // draggable={false} // Deshabilitar arrastrar el mapa
             showsMyLocationButton={true} // Mostrar el botón para localizar la ubicación
             showsUserLocation={false} // Deshabilitar mostrar la ubicación del usuario
             onPress={() => {}}
@@ -404,12 +470,18 @@ export default function TreeRegister() {
         </ThemedView>
 
         <ThemedView style={styles.stepContainerButton}>
-          <TouchableOpacity style={styles.button} onPress={generateQRCode}>
-            <Text style={styles.buttonText}>Generate QR Code</Text>
+          <TouchableOpacity
+            style={styles.cameraButton}
+            onPress={generateQRCode}
+          >
+            <Text style={styles.cameraButtonText}>Generar Código QR</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={saveTreeAndPicture} style={styles.button}>
-            <Text style={styles.button}>Guardar Árbol e Imagen</Text>
+          <TouchableOpacity
+            onPress={saveTreeAndPicture}
+            style={styles.cameraButton}
+          >
+            <Text style={styles.cameraButtonText}>Guardar Árbol e Imagen</Text>
           </TouchableOpacity>
         </ThemedView>
 
@@ -442,7 +514,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    padding: 20,
+    padding: 16,
     backgroundColor: "#f0f0f0",
   },
   title: {
@@ -451,12 +523,38 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     textAlign: "center",
   },
-  input: {
-    fontSize: 18,
+  textIndicators: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginTop: 10,
+    marginBottom: 10,
+  },
+  pickerContainer: {
+    borderWidth: 2, // Border width
+    borderColor: "black", // Border color
+    borderRadius: 8, // Rounded corners
+    // padding: 8, // Padding inside the border
+    marginBottom: 10, // Space below the picker
+    backgroundColor: "#fff", // Optional background color
+  },
+  cameraButton: {
+    backgroundColor: "#9cb898",
     padding: 15,
-    borderWidth: 1,
-    borderColor: "#ccc",
     borderRadius: 5,
+    alignItems: "center",
+    marginBottom: 15,
+  },
+  cameraButtonText: {
+    color: "#fff",
+    fontSize: 18,
+  },
+  input: {
+    fontSize: 16,
+    padding: 8,
+    borderWidth: 2,
+    borderColor: "#000",
+    borderRadius: 8,
+    // marginTop: 5,
     marginBottom: 15,
     backgroundColor: "#fff",
   },
@@ -468,6 +566,7 @@ const styles = StyleSheet.create({
   mapLabel: {
     fontSize: 16,
     fontWeight: "600",
+    marginTop: 10,
     marginBottom: 10,
   },
   button: {
@@ -477,12 +576,24 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   stepContainerButton: {
+    backgroundColor: "transparent",
     gap: 12,
   },
   checkboxContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 10,
+    flexDirection: "row", // Align checkbox and text in a row
+    alignItems: "center", // Vertically center the checkbox and text
+    marginBottom: 10, // Add spacing between checkboxes
+    paddingVertical: 5,
+    // padding: 5, // Padding for the container
+    // borderWidth: 1, // Optional: Add a border around each row
+    // borderColor: "#ccc", // Border color
+    // borderRadius: 5, // Rounded corners
+    // backgroundColor: "#f9f9f9", // Optional: Background color
+  },
+  checkboxLabel: {
+    fontSize: 16,
+    color: "#333", // Text color
+    marginLeft: 8, // Space between checkbox and text
   },
   slider: {
     marginVertical: 15,
@@ -505,12 +616,14 @@ const styles = StyleSheet.create({
     height: 35,
   },
   subHeader: {
-    backgroundColor: "#25be10",
-    color: "white",
-    textAlign: "center",
-    paddingVertical: 10,
-    marginBottom: 20,
-    fontSize: 18,
+    // backgroundColor: "#25be10",
+    color: "black",
+    fontWeight: "bold",
+    textAlign: "left",
+    // paddingVertical: 10,
+    marginBottom: 10,
+    marginTop: 10,
+    fontSize: 20,
   },
   stepContainermap: {
     marginBottom: 20,
