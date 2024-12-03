@@ -55,17 +55,17 @@ export default function TreeRegister() {
   //cpmopnetente de ubicacion
   const [mapVisible, setMapVisible] = useState(false);
 
-  const tipoSitioOptions: string[] = [
-    "Borde Carretero",
-    "Camellon Central",
-    "Camellon Lateral",
-    "Rotonda",
-    "Banqueta",
-    "Servidumbre",
-    "Parque Publico",
-    "Jardin Privado",
-    "Terreno de Cultivo",
-  ];
+const tipoSitioOptions: string[] = [
+    "borde carretero",
+    "camellon central",
+    "camellon lateral",
+    "rotonda",
+    "banqueta",
+    "servidumbre",
+    "parque publico",
+    "jardin privado",
+    "terreno de cultivo",
+];
   const estadoSaludOptions: string[] = [
     "excelente",
     "buena",
