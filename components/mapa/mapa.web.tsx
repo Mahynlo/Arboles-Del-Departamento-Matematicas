@@ -83,8 +83,7 @@ export default function MapaScreen(): JSX.Element {
         const markerElement = document.createElement("div");
         markerElement.style.width = "32px";
         markerElement.style.height = "32px";
-        markerElement.style.backgroundImage =
-            "url(https://semana.mat.uson.mx/~cursotacc/a219211930/prueba/TreeIcon.png)";
+        markerElement.style.backgroundImage ="url(https://semana.mat.uson.mx/~cursotacc/a219211930/prueba/TreeIcon.png)";
         markerElement.style.backgroundSize = "cover";
 
         const marker = new Mapbox.Marker(markerElement)
@@ -164,21 +163,49 @@ export default function MapaScreen(): JSX.Element {
                             <Text style={styles.infoButtonText}>Ir a InfoTree</Text>
                         </Link>
                     </TouchableOpacity>
-                    <Text>-Información General</Text>
-                    <Text>Nombre Científico: {selectedTree.nombre_cientifico}</Text>
-                    <Text>Tipo de Sitio: {selectedTree.tipo_sitio}</Text>
-                    <Text>Dendrometría: {selectedTree.dendometria}</Text>
-                    <Text>Estado de Salud: {selectedTree.estado_salud}</Text>
-                    <Text>Conflictos: {selectedTree.conflictos}</Text>
-                    <Text>Riesgo: {selectedTree.riesgo}</Text>
-                    <Text>Comentarios: {selectedTree.comentarios}</Text>
-                    <Text>-Ubicación</Text>
-                    <Text>Latitud: {selectedTree.latitud}</Text>
-                    <Text>Longitud: {selectedTree.longitud}</Text>
-                    <Text>Imágenes del Árbol</Text>
+                    <Text style={styles.sectionTitle}>-Información General</Text>
+                    <Text>
+                        <Text style={styles.label}>Nombre Científico: </Text>
+                        {selectedTree.nombre_cientifico}
+                    </Text>
+                    <Text>
+                        <Text style={styles.label}>Tipo de Sitio: </Text>
+                        {selectedTree.tipo_sitio}
+                    </Text>
+                    <Text>
+                        <Text style={styles.label}>Dendrometría: </Text>
+                        {selectedTree.dendometria}
+                    </Text>
+                    <Text>
+                        <Text style={styles.label}>Estado de Salud: </Text>
+                        {selectedTree.estado_salud}
+                    </Text>
+                    <Text>
+                        <Text style={styles.label}>Conflictos: </Text>
+                        {selectedTree.conflictos}
+                    </Text>
+                    <Text>
+                        <Text style={styles.label}>Riesgo: </Text>
+                        {selectedTree.riesgo}
+                    </Text>
+                    <Text>
+                        <Text style={styles.label}>Comentarios: </Text>
+                        {selectedTree.comentarios}
+                    </Text>
+                    <Text style={styles.sectionTitle}>-Ubicación</Text>
+                    <Text>
+                        <Text style={styles.label}>Latitud: </Text>
+                        {selectedTree.latitud}
+                    </Text>
+                    <Text>
+                        <Text style={styles.label}>Longitud: </Text>
+                        {selectedTree.longitud}
+                    </Text>
+                    <Text style={styles.sectionTitle}>Imágenes del Árbol</Text>
                     <GalleryTree />
                 </View>
             )}
+
 
             {/* Refresh Button */}
             <TouchableOpacity style={styles.refreshButton} onPress={refreshMapMarkers}>
@@ -252,6 +279,21 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         alignItems: "center",
     },
-    treeTitle: { fontSize: 22, fontWeight: "bold", marginBottom: 5 },
     infoButtonText: { color: "#fff", fontWeight: "bold" },
+    treeTitle: {
+        fontSize: 22,
+        fontWeight: "bold",
+        marginBottom: 10,
+        textAlign: "center", // Centrar el título
+    },
+    sectionTitle: {
+        fontSize: 18,
+        fontWeight: "bold",
+        marginTop: 10,
+        marginBottom: 5,
+        textAlign: "center", // Centrar los títulos de sección
+    },
+    label: {
+        fontWeight: "bold", // Negritas para los textos antes de los dos puntos
+    },
 });

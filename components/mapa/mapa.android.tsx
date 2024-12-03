@@ -6,6 +6,7 @@ import { Link } from 'expo-router';
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { BottomSheet } from '@rneui/themed';
 import { supabase } from '../../lib/supabase';
+import { ThemedText } from '@/components/ThemedText';
 
 interface Tree {
     id_arbol: number;
@@ -173,7 +174,7 @@ export default function MapaScreen() {
                 </TouchableOpacity>
                 {/* Refresh button */}
                 <TouchableOpacity style={styles.refreshButton} onPress={fetchTreeData}>
-                  <TabBarIcon name="refresh-circle-outline" color="#fff" />
+                    <TabBarIcon name="refresh-circle-outline" color="#fff" />
                 </TouchableOpacity>
             </View>
 
@@ -185,25 +186,47 @@ export default function MapaScreen() {
             >
                 {selectedTree && (
                     <View style={styles.infoContainer}>
-                        <Text style={styles.infoText}>{selectedTree.nombre}</Text>
-                        <Text style={styles.infoDetail}>Nombre científico: {selectedTree.nombre_cientifico}</Text>
-                        <Text style={styles.infoDetail}>Tipo de sitio: {selectedTree.tipo_sitio}</Text>
-                        <Text style={styles.infoDetail}>Dendometría: {selectedTree.dendometria}</Text>
-                        <Text style={styles.infoDetail}>Estado: {selectedTree.estado_salud}</Text>
-                        <Text style={styles.infoDetail}>Conflictos: {selectedTree.conflictos}</Text>
-                        <Text style={styles.infoDetail}>Riesgo: {selectedTree.riesgo}</Text>
-                        <Text style={styles.infoDetail}>Comentarios: {selectedTree.comentarios}</Text>
-                        <Text style={styles.infoDetail}>Latitud: {selectedTree.latitud}</Text>
-                        <Text style={styles.infoDetail}>Longitud: {selectedTree.longitud}</Text>
+                        <ThemedText type="title" style={styles.infoTitle}>
+                            Árbol {selectedTree.nombre}
+                        </ThemedText>
+                        <View style={styles.infoTextElements}>
+                            <Text style={styles.infoDetail}>
+                                <Text style={styles.label}>Nombre científico:</Text> {selectedTree.nombre_cientifico}
+                            </Text>
+                            <Text style={styles.infoDetail}>
+                                <Text style={styles.label}>Tipo de sitio:</Text> {selectedTree.tipo_sitio}
+                            </Text>
+                            <Text style={styles.infoDetail}>
+                                <Text style={styles.label}>Dendometría:</Text> {selectedTree.dendometria}
+                            </Text>
+                            <Text style={styles.infoDetail}>
+                                <Text style={styles.label}>Estado:</Text> {selectedTree.estado_salud}
+                            </Text>
+                            <Text style={styles.infoDetail}>
+                                <Text style={styles.label}>Conflictos:</Text> {selectedTree.conflictos}
+                            </Text>
+                            <Text style={styles.infoDetail}>
+                                <Text style={styles.label}>Riesgo:</Text> {selectedTree.riesgo}
+                            </Text>
+                            <Text style={styles.infoDetail}>
+                                <Text style={styles.label}>Comentarios:</Text> {selectedTree.comentarios}
+                            </Text>
+                            <Text style={styles.infoDetail}>
+                                <Text style={styles.label}>Latitud:</Text> {selectedTree.latitud}
+                            </Text>
+                            <Text style={styles.infoDetail}>
+                                <Text style={styles.label}>Longitud:</Text> {selectedTree.longitud}
+                            </Text>
+                        </View>
 
                         <TouchableOpacity style={styles.animatedButton}>
                             <Link href={{ pathname: "/InfoTree", params: { tree: JSON.stringify(selectedTree) } }}>
-                                <Text style={styles.buttonText}>More Info</Text>
+                                <Text style={styles.buttonText}>Más información</Text>
                             </Link>
                         </TouchableOpacity>
 
                         <TouchableOpacity style={styles.animatedButtonClose} onPress={handleCloseInfo}>
-                            <Text style={styles.buttonText}>Close</Text>
+                            <Text style={styles.buttonText}>Cerrar</Text>
                         </TouchableOpacity>
                     </View>
                 )}
@@ -223,10 +246,26 @@ const styles = StyleSheet.create({
     buttonText: { fontSize: 18, color: '#fff' },
     refreshText: { fontSize: 18, color: '#fff', textAlign: 'center' },
     markerImage: { width: 30, height: 30 },
-    infoContainer: { backgroundColor: '#fff', padding: 12, alignItems: 'center', margin: 5, borderRadius: 10, width: '98%' },
+    infoContainer: { backgroundColor: '#fff', padding: 12, margin: 5, borderRadius: 10, width: '98%' },
     infoText: { fontSize: 22, fontWeight: 'bold', color: '#000' },
-    infoDetail: { fontSize: 14, color: '#333', marginBottom: 5 },
-    animatedButton: { backgroundColor: '#1e90ff', padding: 10, borderRadius: 10, marginTop: 10 },
-    animatedButtonClose: { backgroundColor: '#ff0000', padding: 10, borderRadius: 10, marginTop: 10 },
-
+    animatedButton: { backgroundColor: '#1e90ff', padding: 10, borderRadius: 10, marginTop: 10, justifyContent: 'center', alignItems: 'center' },
+    animatedButtonClose: { backgroundColor: '#ff0000', padding: 10, borderRadius: 10, marginTop: 10, justifyContent: 'center', alignItems: 'center' },
+    infoTitle: {
+        fontSize: 22,
+        fontWeight: 'bold',
+        color: '#000',
+        textAlign: 'center', // Centrar el título
+        marginBottom: 10,
+    },
+    infoTextElements: {
+        marginBottom: 5,
+    },
+    infoDetail: {
+        fontSize: 16,
+        color: '#333',
+        marginBottom: 5,
+    },
+    label: {
+        fontWeight: 'bold', // Texto en negritas antes de los dos puntos
+    },
 });
