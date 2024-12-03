@@ -48,7 +48,7 @@ const PieChart: React.FC<PieChartProps> = ({ data, radius = 80, labelRadius = 50
                   y={labelY}
                   fontSize="14"
                   textAnchor="middle"
-                  fill="white"
+                  fill="black"
                   fontWeight="bold"
                 >
                   {item.label}

@@ -13,17 +13,15 @@ import { Link } from "expo-router";
 
 
 const chartData = [
-  { value: 25, color: "#ff9999", label: "Segmento A" },
-  { value: 35, color: "#66b3ff", label: "Segmento B" },
-  { value: 20, color: "#99ff99", label: "Segmento C" },
-  { value: 20, color: "#ffcc66", label: "Segmento D" },
-  { value: 70, color: "#ffcc", label: "Segmento j" },
+  { value: 25, color: "#ff9999", label: "Riesgo" },
+  { value: 35, color: "#66b3ff", label: "Sanos" },
+  { value: 20, color: "#99ff99", label: "Muertos" },
 ];
 const chartDataBar = [
   { value: 30, color: "#ff9999", label: "Barra A" },
   { value: 70, color: "#66b3ff", label: "Barra B" },
   { value: 50, color: "#99ff99", label: "Barra C" },
-  { value: 200, color: "#ffcc66", label: "Barra D" },
+  { value: 80, color: "#ffcc66", label: "Barra D" },
 ];
 
 // Reusable Card Component
@@ -167,7 +165,7 @@ export default function HomeScreen() {
             {/* Graph Placeholder */}
             <View style={styles.graphContainerMobile}>
               <ThemedText type="default">graph placeholder</ThemedText>
-              {/* <BarChart data={chartDataBar} width={300} height={200} barWidth={30} /> */}
+              <BarChart data={chartDataBar}  />
             </View>
   
             {/* Tree List */}
@@ -211,10 +209,12 @@ export default function HomeScreen() {
                 ) : (
                   <>
                     <View style={styles.graphPlaceholder}>
-                      <Text style={styles.placeholderText}>Graph Placeholder 1</Text>
+                      {/*<Text style={styles.placeholderText}>Graph Placeholder 1</Text>*/}
+                      <BarChart data={chartDataBar}  />
                     </View>
                     <View style={styles.graphPlaceholder}>
-                      <Text style={styles.placeholderText}>Graph Placeholder 2</Text>
+                      {/*<Text style={styles.placeholderText}>Graph Placeholder 2</Text>*/}
+                      <PieChart data={chartData} />
                     </View>
                   </>
                 )}

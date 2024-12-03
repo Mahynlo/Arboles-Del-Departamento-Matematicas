@@ -470,13 +470,14 @@ const tipoSitioOptions: string[] = [
         </ThemedView>
 
         <ThemedView style={styles.stepContainerButton}>
+          {/*
           <TouchableOpacity
             style={styles.cameraButton}
             onPress={generateQRCode}
           >
             <Text style={styles.cameraButtonText}>Generar Código QR</Text>
           </TouchableOpacity>
-
+            */}
           <TouchableOpacity
             onPress={saveTreeAndPicture}
             style={styles.cameraButton}
@@ -484,7 +485,7 @@ const tipoSitioOptions: string[] = [
             <Text style={styles.cameraButtonText}>Guardar Árbol e Imagen</Text>
           </TouchableOpacity>
         </ThemedView>
-
+      {/*
         {isQRActive && (
           <View style={styles.qrCodeContainer}>
             <QRCode
@@ -500,8 +501,10 @@ const tipoSitioOptions: string[] = [
             >
               <Text style={styles.buttonText}>Save QR Code</Text>
             </TouchableOpacity>
+           
           </View>
         )}
+        */}
       </View>
     </ScrollView>
   );

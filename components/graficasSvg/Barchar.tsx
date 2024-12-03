@@ -15,7 +15,7 @@ interface BarChartProps {
   barWidth?: number; // Ancho de las barras
 }
 
-const BarChart: React.FC<BarChartProps> = ({ data, width = 300, height = 200, barWidth = 30 }) => {
+const BarChart: React.FC<BarChartProps> = ({ data, width = 200, height = 100, barWidth = 22 }) => {
   const maxValue = Math.max(...data.map(item => item.value)); // Encuentra el valor máximo para la escala
   const spacing = (width - barWidth * data.length) / (data.length + 1); // Espaciado entre las barras
 
@@ -47,14 +47,24 @@ const BarChart: React.FC<BarChartProps> = ({ data, width = 300, height = 200, ba
           return (
             <React.Fragment key={index}>
               <Rect x={x} y={y} width={barWidth} height={barHeight} fill={item.color} />
-              {/* Etiqueta de cada barra */}
+              {/* Número de valor encima de la barra */}
               <SvgText
                 x={x + barWidth / 2}
-                y={y - 10}
+                y={y - 5} // Coloca el valor justo encima de la barra
                 fontSize="12"
                 textAnchor="middle"
                 fill="black"
                 fontWeight="bold"
+              >
+                {item.value}
+              </SvgText>
+              {/* Etiqueta debajo de la barra */}
+              <SvgText
+                x={x + barWidth / 2}
+                y={height + 10} // Coloca la etiqueta debajo de la barra
+                fontSize="12"
+                textAnchor="middle"
+                fill="black"
               >
                 {item.label}
               </SvgText>
