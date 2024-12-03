@@ -75,9 +75,9 @@ export default function HomeScreen() {
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.container}>
         {/* Header Section */}
-        <View ref={headerRef} style={styles.header} onLayout={handleHeaderLayout}>
+        <View ref={headerRef} style={[styles.header, {padding: isMobile ? 0 : 16}]} onLayout={handleHeaderLayout}>
           <ThemedView style={styles.headercontainer}>
-            <ThemedText type="title" style={[styles.title, { fontSize: isMobile ? 32 : 48 }]}>
+            <ThemedText type="title" style={[styles.title, {fontSize: isMobile ? 32 : 48 }]}>
               Árboles del Departamento de Matemáticas
             </ThemedText>
             <ThemedText type="subtitle" style={[styles.subtitle, { fontSize: isMobile ? 14 : 16 }]}>
@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
   header: {
     alignItems: "flex-start",
     marginBottom: 16,
-    padding: 16,
+    // padding: 16,
     backgroundColor: "#DFECF2",
     borderRadius: 12,
   },
