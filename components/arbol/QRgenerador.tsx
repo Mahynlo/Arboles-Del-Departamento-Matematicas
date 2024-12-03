@@ -1,48 +1,61 @@
 import QRCode from 'react-native-qrcode-svg';
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Alert, Modal, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Alert, Modal, ScrollView, Platform } from 'react-native';
 import * as FileSystem from 'expo-file-system';
 import * as MediaLibrary from 'expo-media-library';
 
 interface QRProps {
-    isVisible: boolean; // Estado para mostrar u ocultar el modal
-    qrvalue: string; // Valor del QR
-    onQRImpresion: (qrValue: string) => void; // Función para enviar el valor del QR al componente principal
-    onClose: () => void; // Función para cerrar el modal
+    isVisible: boolean;
+    qrvalue: string;
+    onQRImpresion: (qrValue: string) => void;
+    onClose: () => void;
 }
 
 export const QRgenerador = ({ isVisible, qrvalue, onQRImpresion, onClose }: QRProps) => {
     const qrRef = useRef<any>(null);
-    const [isQRActive, setIsQRActive] = useState(false); // Estado para controlar si el QR está activo o no
+    const [isQRActive, setIsQRActive] = useState(false);
 
     useEffect(() => {
         if (qrvalue) {
-            setIsQRActive(true); // Si qrvalue tiene un valor, activamos el QR
+            setIsQRActive(true);
         }
-    }, [qrvalue]); // Se ejecutará cada vez que el qrvalue cambie
+    }, [qrvalue]);
 
     const saveQRCode = async () => {
         if (qrRef.current) {
             qrRef.current.toDataURL(async (data: string) => {
-                const filePath = `${FileSystem.documentDirectory}tree_qr_code.png`; // Usamos documentDirectory para acceso más directo
-
                 try {
-                    // Aseguramos que los datos de la imagen se escriben correctamente
-                    await FileSystem.writeAsStringAsync(filePath, data, {
-                        encoding: FileSystem.EncodingType.Base64,
-                    });
-
-                    const { status } = await MediaLibrary.requestPermissionsAsync();
-                    if (status !== 'granted') {
-                        Alert.alert('Error', 'Permission to access media library is required.');
-                        return;
+                    // Decodificar el valor del QR para obtener los datos del árbol
+                    const decodedValue = decodeURIComponent(qrvalue.replace('ARDEMA=', ''));
+                    const treeData = JSON.parse(decodedValue);
+                    const treeName = treeData?.nombre || 'TreeQRCode'; // Usar nombre o un valor por defecto
+    
+                    if (Platform.OS === 'web') {
+                        // Web: Descargar el QR como imagen
+                        const link = document.createElement('a');
+                        link.href = `data:image/png;base64,${data}`;
+                        link.download = `Arbol_${treeName.replace(/\s+/g, '_')}_QR.png`; // Sustituir espacios por guiones bajos
+                        link.click();
+                    } else {
+                        // Móvil: Guardar el QR en la galería
+                        const filePath = `${FileSystem.documentDirectory}${treeName.replace(/\s+/g, '_')}_qr_code.png`;
+    
+                        await FileSystem.writeAsStringAsync(filePath, data, {
+                            encoding: FileSystem.EncodingType.Base64,
+                        });
+    
+                        const { status } = await MediaLibrary.requestPermissionsAsync();
+                        if (status !== 'granted') {
+                            Alert.alert('Error', 'Permission to access media library is required.');
+                            return;
+                        }
+    
+                        const asset = await MediaLibrary.createAssetAsync(filePath);
+                        await MediaLibrary.createAlbumAsync('TreeQRCode', asset, false);
+    
+                        Alert.alert('Success', 'QR Code saved to gallery!');
+                        onClose();
                     }
-
-                    const asset = await MediaLibrary.createAssetAsync(filePath);
-                    await MediaLibrary.createAlbumAsync('TreeQRCode', asset, false); // Guardamos en un álbum
-
-                    Alert.alert('Success', 'QR Code saved to gallery!');
-                    onClose(); // Cerramos el modal
                 } catch (error) {
                     console.log('Error saving QR code:', error);
                     Alert.alert('Error', 'Failed to save QR Code.');
@@ -50,6 +63,7 @@ export const QRgenerador = ({ isVisible, qrvalue, onQRImpresion, onClose }: QRPr
             });
         }
     };
+    
 
     if (!isVisible) return null;
 
@@ -58,28 +72,25 @@ export const QRgenerador = ({ isVisible, qrvalue, onQRImpresion, onClose }: QRPr
             <ScrollView contentContainerStyle={styles.qrCodeContainer}>
                 <Text style={styles.header}>Generate QR Code</Text>
 
-                {/* El QR se genera automáticamente con el valor pasado como prop */}
                 {isQRActive && (
                     <QRCode
-                        value={qrvalue} // Usamos el valor que pasas como prop
+                        value={qrvalue}
                         size={256}
                         color="black"
                         backgroundColor="white"
-                        logo={{ uri: 'https://semana.mat.uson.mx/~cursotacc/a219211930/prueba/TreeIcon.png'}}
+                        logo={{ uri: 'https://semana.mat.uson.mx/~cursotacc/a219211930/prueba/TreeIcon.png' }}
                         logoSize={30}
                         logoBackgroundColor="transparent"
                         getRef={(c) => (qrRef.current = c)}
                     />
                 )}
 
-                {/* Botón para guardar el QR */}
                 {isQRActive && (
                     <TouchableOpacity style={[styles.button, { marginTop: 20 }]} onPress={saveQRCode}>
                         <Text style={styles.buttonText}>Guardar QR</Text>
                     </TouchableOpacity>
                 )}
 
-                {/* Botón para cerrar el modal */}
                 <TouchableOpacity style={styles.button} onPress={onClose}>
                     <Text style={styles.buttonText}>Close</Text>
                 </TouchableOpacity>
