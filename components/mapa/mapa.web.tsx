@@ -127,6 +127,14 @@ export default function MapaScreen(): JSX.Element {
         }
     };
 
+     // Example of formatArray function
+const formatArray = (input: string | string[]): string => {
+    if (Array.isArray(input)) {
+        return input.join(', ');
+    }
+    return input; // If it's a single string, return it as is
+};
+
     useEffect(() => {
         fetchTreeData();
     }, []);
@@ -182,11 +190,11 @@ export default function MapaScreen(): JSX.Element {
                     </Text>
                     <Text>
                         <Text style={styles.label}>Conflictos: </Text>
-                        {selectedTree.conflictos}
+                        {formatArray(selectedTree?.conflictos)}
                     </Text>
                     <Text>
                         <Text style={styles.label}>Riesgo: </Text>
-                        {selectedTree.riesgo}
+                        {formatArray(selectedTree?.riesgo)}
                     </Text>
                     <Text>
                         <Text style={styles.label}>Comentarios: </Text>

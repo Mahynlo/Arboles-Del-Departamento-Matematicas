@@ -70,6 +70,13 @@ export default function RootLayout() {
         }} />
         <Stack.Screen name='InfoTree' options={{
           title: 'Información del Árbol',
+          headerTitleStyle: {
+            fontSize: 20,
+            fontWeight: 'bold',
+            color: '#fff',
+            // Asegúrate de que la fuente esté cargada
+          },
+          headerStyle: { backgroundColor: '#9cb898' },
         }} />
         <Stack.Screen name='scanerCamara' options={{
           title: 'Escaner de QR',
